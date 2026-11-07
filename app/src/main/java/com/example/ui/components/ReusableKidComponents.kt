@@ -78,12 +78,8 @@ import com.example.ui.theme.LuluPink
 import com.example.ui.theme.LuluPinkDark
 import com.example.ui.theme.MagicPurple
 import com.example.ui.theme.MagicPurpleDark
-import com.example.ui.theme.MeadowGreen
-import com.example.ui.theme.MeadowGreenDark
-import com.example.ui.theme.SkyCyan
 import com.example.ui.theme.SkyCyanDark
 import com.example.ui.theme.SoftSlateText
-import com.example.ui.theme.StarGold
 import com.example.ui.theme.StarGoldBorder
 import com.example.ui.theme.SunnyYellow
 import com.example.ui.theme.SunnyYellowDark
@@ -151,7 +147,7 @@ fun Bouncy3DButton(
                 .offset(y = pressOffset),
             shape = shape,
             color = containerColor,
-            border = BorderStroke(2.dp, Color.White.copy(alpha = 0.7f))
+            border = BorderStroke(2.dp, Color.White.copy(alpha = 0.75f))
         ) {
             Row(
                 modifier = Modifier.padding(contentPadding),
@@ -302,7 +298,6 @@ fun TopKidHeaderBar(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f)
                 ) {
-                    // 3D Star Book App Logo Emblem
                     Surface(
                         modifier = Modifier.size(60.dp),
                         shape = RoundedCornerShape(20.dp),
@@ -333,7 +328,7 @@ fun TopKidHeaderBar(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = if (isArabic) "Fun Learning World • للأطفال ٤–٦ سنوات" else "عالم المرح والتعلّم • Kids Ages 4–6",
+                            text = if (isArabic) "تعلّم والعب مع لولو • ٤ إلى ٦ سنوات" else "Learn & Play with Lulu • Ages 4–6",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = if (isArabic) 15.sp else 14.sp
@@ -382,7 +377,7 @@ fun TopKidHeaderBar(
                         containerColor = MagicPurple,
                         shadowColor = MagicPurpleDark,
                         iconTint = Color.White,
-                        badgeLabel = if (isArabic) "ركن الأهل" else "Parents",
+                        badgeLabel = if (isArabic) "الأهل" else "Parents",
                         testTagName = "parent_section_button"
                     )
                 }
@@ -460,10 +455,9 @@ private fun LanguageTabChip(
 
 /**
  * Engaging Lulu Mascot Hero Welcome Card on the Home Screen:
- * - Larger, expressive 3D cartoon Lulu with animated floating motion and sparkle badges
- * - High-contrast speech bubble with large Arabic/English text
+ * - Features a large, fully visible 3D cartoon girl mascot portrait (no overlapping badges on her face/body)
+ * - High-contrast speech bubble with natural, preschool-friendly Arabic/English text
  * - Prominent "ابدأ التعلّم الآن! / Start Learning Now!" main 3D CTA button
- * - Interactive button to hear/cycle Lulu's encouraging message
  */
 @Composable
 fun LuluMascotWelcomeCard(
@@ -475,22 +469,13 @@ fun LuluMascotWelcomeCard(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "lulu_float")
     val floatOffset by infiniteTransition.animateFloat(
-        initialValue = -5f,
-        targetValue = 5f,
+        initialValue = -4f,
+        targetValue = 4f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1900, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 2000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "lulu_vertical_bob"
-    )
-    val badgePulse by infiniteTransition.animateFloat(
-        initialValue = 0.94f,
-        targetValue = 1.06f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "lulu_badge_pulse"
     )
 
     Card(
@@ -521,7 +506,8 @@ fun LuluMascotWelcomeCard(
                 .padding(18.dp)
         ) {
             val isWide = maxWidth >= 520.dp
-            val avatarSize = if (isWide) 144.dp else 118.dp
+            val portraitWidth = if (isWide) 158.dp else 130.dp
+            val portraitHeight = if (isWide) 172.dp else 144.dp
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -532,19 +518,18 @@ fun LuluMascotWelcomeCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Lulu 3D Character Stage with Glowing Frame & Sparkles
-                    Box(
+                    // Fully Visible 3D Lulu Character Portrait + Name Pill underneath
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
                         modifier = Modifier
-                            .size(avatarSize + 10.dp)
                             .offset(y = floatOffset.dp)
-                            .clickable(onClick = onTapLulu),
-                        contentAlignment = Alignment.Center
+                            .clickable(onClick = onTapLulu)
                     ) {
-                        // Outer Golden Halo
                         Surface(
-                            modifier = Modifier.size(avatarSize),
-                            shape = CircleShape,
-                            color = Color(0xFFDFF4FF),
+                            modifier = Modifier.size(width = portraitWidth, height = portraitHeight),
+                            shape = RoundedCornerShape(28.dp),
+                            color = Color(0xFFCFE9FF),
                             border = BorderStroke(4.dp, SunnyYellow),
                             shadowElevation = 8.dp
                         ) {
@@ -556,50 +541,15 @@ fun LuluMascotWelcomeCard(
                             )
                         }
 
-                        // Floating Star Sparkle Badge (Top-Start)
+                        // Name Ribbon cleanly below the portrait so Lulu is 100% visible
                         Surface(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .scale(badgePulse),
-                            shape = CircleShape,
-                            color = SunnyYellow,
-                            border = BorderStroke(2.dp, Color.White),
-                            shadowElevation = 4.dp
-                        ) {
-                            Text(
-                                text = "🌟",
-                                modifier = Modifier.padding(5.dp),
-                                fontSize = 15.sp
-                            )
-                        }
-
-                        // Waving Hand Badge (Top-End)
-                        Surface(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .scale(badgePulse),
-                            shape = CircleShape,
-                            color = Color.White,
-                            border = BorderStroke(2.dp, LuluPink),
-                            shadowElevation = 4.dp
-                        ) {
-                            Text(
-                                text = "👋",
-                                modifier = Modifier.padding(5.dp),
-                                fontSize = 15.sp
-                            )
-                        }
-
-                        // High-Contrast Name Ribbon under Lulu
-                        Surface(
-                            modifier = Modifier.align(Alignment.BottomCenter),
                             shape = RoundedCornerShape(14.dp),
                             color = Color(0xFFC2185B),
                             border = BorderStroke(2.dp, Color.White),
-                            shadowElevation = 4.dp
+                            shadowElevation = 3.dp
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 3.dp),
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
@@ -626,25 +576,19 @@ fun LuluMascotWelcomeCard(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Greeting Header Badge
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFF6A1B9A)
                         ) {
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = Color(0xFF6A1B9A)
-                            ) {
-                                Text(
-                                    text = if (isArabic) "أهلاً بكم يا أبطال! 🎉" else "Welcome Little Explorers! 🎉",
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = if (isArabic) 14.sp else 13.sp
-                                    )
+                            Text(
+                                text = if (isArabic) "مرحباً يا أصدقائي! 🌟" else "Hello My Friends! 🌟",
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = if (isArabic) 15.sp else 13.sp
                                 )
-                            }
+                            )
                         }
 
                         // Crisp White Speech Bubble with Dark High-Contrast Text
@@ -681,11 +625,11 @@ fun LuluMascotWelcomeCard(
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Text(
-                                        text = if (isArabic) "اضغط على كلام لولو لرسالة جديدة 💬" else "Tap Lulu's bubble for a new tip 💬",
+                                        text = if (isArabic) "اضغط هنا لسماع رسالة أخرى من لولو" else "Tap here for another message from Lulu",
                                         color = Color(0xFFC2185B),
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = if (isArabic) 14.sp else 12.sp
+                                            fontSize = if (isArabic) 13.sp else 12.sp
                                         )
                                     )
                                 }
@@ -696,7 +640,7 @@ fun LuluMascotWelcomeCard(
 
                 // Prominent Main "Start Learning" Hero CTA Button
                 Bouncy3DButton(
-                    text = if (isArabic) "ابدأ التعلّم والمرح الآن! 🚀" else "Start Learning & Playing Now! 🚀",
+                    text = if (isArabic) "ابدأ التعلّم الآن!" else "Start Learning Now!",
                     onClick = onStartLearning,
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = Color(0xFFD81B60),
@@ -716,11 +660,11 @@ fun LuluMascotWelcomeCard(
 
 /**
  * Large, colorful, illustrated 3D card for each of the 8 learning categories.
- * Optimized for a 2-column grid on mobile phones and tablets:
- * - Unique colorful 3D cartoon illustration with overlaid Category Icon & 3-Star badges
- * - Large, high-contrast Arabic/English title + bilingual chip
- * - Readable description
- * - Prominent, full-width tactile 3D interaction button
+ * Features:
+ * - Clean header row with category icon badge and 3-star progress pill
+ * - Full, unobstructed 3D cartoon illustration for the category (no covering symbols or dark scrims)
+ * - Large readable Arabic/English title + natural subtitle
+ * - Prominent tactile 3D interaction button
  */
 @Composable
 fun LearningCategoryCard(
@@ -761,7 +705,7 @@ fun LearningCategoryCard(
         contentAlignment = Alignment.TopCenter
     ) {
         val isTabletCard = maxWidth >= 230.dp
-        val illustrationHeight = if (isTabletCard) 186.dp else 138.dp
+        val illustrationHeight = if (isTabletCard) 190.dp else 144.dp
 
         // 3D Bottom Shadow Lip
         Box(
@@ -788,14 +732,73 @@ fun LearningCategoryCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // 1. Unique Colorful 3D Cartoon Illustration Box with Top & Bottom Badges
-                Box(
+                // 1. Top Row: Category Icon Badge + 3-Star Progress Pill (above image so illustration is 100% clear)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = category.accentColor,
+                        border = BorderStroke(1.5.dp, Color.White),
+                        shadowElevation = 3.dp
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = category.icon,
+                                contentDescription = category.title(language),
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "${category.numberIndex}",
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp
+                                )
+                            )
+                        }
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = Color.White,
+                        border = BorderStroke(1.5.dp, StarGoldBorder),
+                        shadowElevation = 2.dp
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(1.dp)
+                        ) {
+                            repeat(category.maxStars) { idx ->
+                                val filled = idx < earnedStars
+                                Icon(
+                                    imageVector = if (filled) Icons.Filled.Star else Icons.Filled.StarBorder,
+                                    contentDescription = null,
+                                    tint = if (filled) StarGoldBorder else Color(0xFFB0BEC5),
+                                    modifier = Modifier.size(15.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // 2. Full, Unobstructed Colorful 3D Cartoon Illustration
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(illustrationHeight)
-                        .clip(RoundedCornerShape(22.dp))
-                        .background(Color.White)
-                        .border(2.5.dp, Color.White, RoundedCornerShape(22.dp))
+                        .height(illustrationHeight),
+                    shape = RoundedCornerShape(22.dp),
+                    color = Color.White,
+                    border = BorderStroke(2.5.dp, Color.White),
+                    shadowElevation = 4.dp
                 ) {
                     Image(
                         painter = painterResource(id = category.illustrationResId),
@@ -803,115 +806,9 @@ fun LearningCategoryCard(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
-
-                    // Subtle bottom gradient scrim for floating badges contrast
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Black.copy(alpha = 0.08f),
-                                        Color.Transparent,
-                                        category.shadowColor.copy(alpha = 0.55f)
-                                    )
-                                )
-                            )
-                    )
-
-                    // Top Overlay Row: Friendly Category Icon Badge + 3-Star Progress Pill
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(14.dp),
-                            color = category.accentColor,
-                            border = BorderStroke(1.5.dp, Color.White),
-                            shadowElevation = 4.dp
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = category.icon,
-                                    contentDescription = category.title(language),
-                                    tint = Color.White,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Text(
-                                    text = "${category.numberIndex}",
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 13.sp
-                                    )
-                                )
-                            }
-                        }
-
-                        // High-Contrast 3-Star Pill
-                        Surface(
-                            shape = RoundedCornerShape(14.dp),
-                            color = Color.White.copy(alpha = 0.96f),
-                            border = BorderStroke(1.5.dp, StarGoldBorder),
-                            shadowElevation = 3.dp
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(1.dp)
-                            ) {
-                                repeat(category.maxStars) { idx ->
-                                    val filled = idx < earnedStars
-                                    Icon(
-                                        imageVector = if (filled) Icons.Filled.Star else Icons.Filled.StarBorder,
-                                        contentDescription = null,
-                                        tint = if (filled) StarGoldBorder else Color(0xFFB0BEC5),
-                                        modifier = Modifier.size(15.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    // Bottom Floating 3D Character Chips
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 7.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        category.floatingBadges.take(3).forEach { symbol ->
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = Color.White.copy(alpha = 0.96f),
-                                border = BorderStroke(1.5.dp, category.accentColor),
-                                shadowElevation = 4.dp
-                            ) {
-                                Text(
-                                    text = symbol,
-                                    modifier = Modifier.padding(horizontal = 9.dp, vertical = 2.dp),
-                                    color = category.shadowColor,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = if (isTabletCard) 17.sp else 15.sp
-                                    )
-                                )
-                            }
-                        }
-                    }
                 }
 
-                // 2. Large, Ultra-Readable Category Title + Secondary Language Badge + Subtitle
+                // 3. Large, Ultra-Readable Category Title + Secondary Language Badge + Subtitle
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -935,7 +832,6 @@ fun LearningCategoryCard(
                         textAlign = TextAlign.Center
                     )
 
-                    // Bilingual Secondary Title Pill
                     Surface(
                         shape = RoundedCornerShape(10.dp),
                         color = Color.White,
@@ -968,7 +864,7 @@ fun LearningCategoryCard(
                     )
                 }
 
-                // 3. Prominent, Easy-to-Tap 3D Interaction Button
+                // 4. Prominent, Easy-to-Tap 3D Interaction Button
                 Bouncy3DButton(
                     text = category.buttonLabel(language),
                     onClick = onClick,
@@ -989,7 +885,7 @@ fun LearningCategoryCard(
 }
 
 /**
- * Bottom Section:
+ * Bottom Section (Normal Scrolling Item):
  * - My Learning Journey (رحلتي التعليمية)
  * - Stars Earned (النجوم المكتسبة)
  * - High-Contrast Rainbow Progress Indicator + Interactive Journey Button
@@ -1015,9 +911,9 @@ fun BottomLearningJourneyBar(
             .fillMaxWidth()
             .testTag("bottom_learning_journey_bar")
             .shadow(
-                elevation = 14.dp,
+                elevation = 10.dp,
                 shape = RoundedCornerShape(28.dp),
-                spotColor = Color(0x504A148C)
+                spotColor = Color(0x404A148C)
             )
             .clickable(onClick = onOpenJourney),
         shape = RoundedCornerShape(28.dp),
@@ -1027,15 +923,14 @@ fun BottomLearningJourneyBar(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Title with Trophy Icon
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -1044,7 +939,7 @@ fun BottomLearningJourneyBar(
                     Surface(
                         shape = CircleShape,
                         color = MagicPurpleDark,
-                        modifier = Modifier.size(42.dp)
+                        modifier = Modifier.size(44.dp)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
@@ -1062,11 +957,11 @@ fun BottomLearningJourneyBar(
                             color = DeepNavyText,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = if (isArabic) 19.sp else 17.sp
+                                fontSize = if (isArabic) 20.sp else 18.sp
                             )
                         )
                         Text(
-                            text = if (isArabic) "اضغط لعرض خريطة النجوم والجوائز 🌟" else "Tap to view your Star Map & Rewards 🌟",
+                            text = if (isArabic) "اضغط هنا لمشاهدة نجومك وجوائزك 🌟" else "Tap here to view your stars & rewards 🌟",
                             color = SoftSlateText,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
@@ -1136,7 +1031,7 @@ fun BottomLearningJourneyBar(
                 Surface(
                     modifier = Modifier.align(Alignment.Center),
                     shape = RoundedCornerShape(8.dp),
-                    color = Color.White.copy(alpha = 0.9f)
+                    color = Color.White.copy(alpha = 0.92f)
                 ) {
                     Text(
                         text = "${(animatedProgress * 100).toInt()}%",

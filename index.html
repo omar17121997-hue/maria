@@ -41,14 +41,13 @@
       background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--meadow-bot) 100%);
       overflow-x: hidden;
       position: relative;
-      padding-bottom: 120px;
+      padding-bottom: 40px;
     }
 
     html[dir="ltr"] body {
       font-family: 'Fredoka', 'Cairo', sans-serif;
     }
 
-    /* Animated Sky Decorations */
     .sky-decorations {
       position: fixed;
       inset: 0;
@@ -143,14 +142,14 @@
     }
 
     .brand-titles h1 {
-      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
       font-weight: 900;
       color: var(--deep-navy);
       line-height: 1.25;
     }
 
     .brand-titles p {
-      font-size: clamp(0.9rem, 2vw, 1rem);
+      font-size: clamp(0.92rem, 2vw, 1.05rem);
       font-weight: 700;
       color: #AD1457;
     }
@@ -162,7 +161,6 @@
       flex-wrap: wrap;
     }
 
-    /* Language Pill Switch */
     .lang-switch {
       display: inline-flex;
       background: #E1F5FE;
@@ -191,7 +189,6 @@
       box-shadow: 0 3px 8px rgba(2, 136, 209, 0.35);
     }
 
-    /* 3D Buttons */
     .btn-3d {
       border: 2px solid rgba(255, 255, 255, 0.75);
       border-radius: 20px;
@@ -235,7 +232,7 @@
       background: linear-gradient(135deg, #FFF0F6 0%, #FFFDE7 55%, #E8F8FF 100%);
       border: 3.5px solid #FF80AB;
       border-radius: 32px;
-      padding: 20px;
+      padding: 22px;
       box-shadow: 0 12px 28px rgba(216, 27, 96, 0.18);
       display: flex;
       flex-direction: column;
@@ -245,59 +242,48 @@
     .lulu-top-row {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 20px;
     }
 
-    .lulu-avatar-wrap {
-      position: relative;
-      width: 132px;
-      height: 132px;
+    .lulu-stage-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
       flex-shrink: 0;
       cursor: pointer;
       animation: luluBob 2.2s ease-in-out infinite alternate;
     }
 
     @keyframes luluBob {
-      0% { transform: translateY(-5px); }
-      100% { transform: translateY(5px); }
+      0% { transform: translateY(-4px); }
+      100% { transform: translateY(4px); }
     }
 
-    .lulu-avatar {
+    .lulu-portrait-frame {
+      width: 152px;
+      height: 166px;
+      border-radius: 28px;
+      border: 4px solid var(--sunny-yellow);
+      overflow: hidden;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+      background: #CFE9FF;
+      position: relative;
+    }
+
+    .lulu-portrait-frame img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
-      border: 4px solid var(--sunny-yellow);
       object-fit: cover;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-      background: #DFF4FF;
+      display: block;
     }
-
-    .lulu-badge-star, .lulu-badge-wave {
-      position: absolute;
-      top: 0;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.05rem;
-      border: 2px solid #FFF;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    }
-    .lulu-badge-star { left: -4px; background: var(--sunny-yellow); }
-    .lulu-badge-wave { right: -4px; background: #FFFFFF; border-color: #FF80AB; }
 
     .lulu-name-pill {
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
       background: #C2185B;
       color: #FFFFFF;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 800;
-      padding: 3px 12px;
+      padding: 4px 14px;
       border-radius: 14px;
       border: 2px solid #FFFFFF;
       white-space: nowrap;
@@ -308,7 +294,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .welcome-tag {
@@ -316,8 +302,8 @@
       background: var(--magic-purple);
       color: #FFFFFF;
       font-weight: 800;
-      font-size: 0.9rem;
-      padding: 4px 12px;
+      font-size: 0.95rem;
+      padding: 5px 14px;
       border-radius: 12px;
     }
 
@@ -325,7 +311,7 @@
       background: #FFFFFF;
       border: 2.5px solid var(--sunny-yellow-dark);
       border-radius: 22px;
-      padding: 14px 16px;
+      padding: 16px 18px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
       transition: transform 0.15s ease;
@@ -335,15 +321,15 @@
     }
 
     .speech-text {
-      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      font-size: clamp(1.15rem, 2.5vw, 1.35rem);
       font-weight: 800;
       color: var(--deep-navy);
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
     .speech-hint {
-      margin-top: 6px;
-      font-size: 0.88rem;
+      margin-top: 8px;
+      font-size: 0.9rem;
       font-weight: 800;
       color: #C2185B;
       display: flex;
@@ -354,7 +340,7 @@
     .btn-start-hero {
       width: 100%;
       padding: 15px 24px;
-      font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+      font-size: clamp(1.2rem, 2.5vw, 1.4rem);
       background: var(--lulu-pink);
       color: #FFFFFF;
       border-radius: 24px;
@@ -374,7 +360,7 @@
     }
 
     .section-banner h2 {
-      font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+      font-size: clamp(1.2rem, 2.5vw, 1.45rem);
       font-weight: 900;
       color: var(--deep-navy);
     }
@@ -384,7 +370,7 @@
       border: 1.5px solid var(--sunny-yellow-dark);
       color: var(--deep-navy);
       font-weight: 800;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       padding: 5px 14px;
       border-radius: 14px;
     }
@@ -416,27 +402,8 @@
       transform: translateY(4px) scale(0.98);
     }
 
-    .card-illustration-box {
-      position: relative;
+    .card-header-row {
       width: 100%;
-      height: 165px;
-      border-radius: 22px;
-      overflow: hidden;
-      border: 2.5px solid #FFFFFF;
-      background: #FFFFFF;
-    }
-
-    .card-illustration-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .card-top-badges {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -449,39 +416,38 @@
       padding: 4px 10px;
       border-radius: 14px;
       border: 1.5px solid #FFFFFF;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
     .cat-stars-badge {
-      background: rgba(255, 255, 255, 0.96);
+      background: #FFFFFF;
       border: 1.5px solid var(--sunny-yellow-dark);
       border-radius: 14px;
       padding: 3px 8px;
       font-size: 0.88rem;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .card-bottom-chips {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      right: 8px;
-      display: flex;
-      justify-content: space-evenly;
-      gap: 6px;
+    .card-illustration-box {
+      position: relative;
+      width: 100%;
+      height: 175px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 2.5px solid #FFFFFF;
+      background: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
 
-    .floating-chip {
-      background: rgba(255, 255, 255, 0.96);
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-weight: 900;
-      font-size: 1rem;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    .card-illustration-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .card-title {
-      font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+      font-size: clamp(1.25rem, 2.6vw, 1.55rem);
       font-weight: 900;
       color: var(--deep-navy);
       text-align: center;
@@ -497,7 +463,7 @@
     }
 
     .card-subtitle {
-      font-size: clamp(0.9rem, 2vw, 1.02rem);
+      font-size: clamp(0.92rem, 2vw, 1.05rem);
       font-weight: 700;
       color: var(--soft-slate);
       text-align: center;
@@ -506,32 +472,24 @@
     .card-action-btn {
       width: 100%;
       padding: 11px 14px;
-      font-size: 1.05rem;
+      font-size: 1.08rem;
       color: #FFFFFF;
       border-radius: 20px;
       margin-top: auto;
     }
 
-    /* Sticky Bottom Learning Journey Bar */
-    .bottom-journey-wrap {
-      position: fixed;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(960px, calc(100vw - 24px));
-      z-index: 20;
-    }
-
+    /* Normal Scrolling Bottom Learning Journey Bar (Never covers content) */
     .bottom-journey-bar {
       background: #FFFFFF;
       border: 3px solid var(--sunny-yellow-dark);
       border-radius: 28px;
-      padding: 12px 18px;
-      box-shadow: 0 12px 28px rgba(74, 20, 140, 0.25);
+      padding: 16px 20px;
+      box-shadow: 0 10px 24px rgba(74, 20, 140, 0.16);
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+      margin-top: 6px;
     }
 
     .journey-top-row {
@@ -548,14 +506,14 @@
     }
 
     .trophy-circle {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: var(--magic-purple-dark);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
+      font-size: 1.35rem;
     }
 
     .journey-stars-pill {
@@ -598,7 +556,6 @@
       color: var(--deep-navy);
     }
 
-    /* Category Placeholder Screen & Modals */
     .hidden {
       display: none !important;
     }
@@ -636,11 +593,6 @@
       transition: all 0.15s ease;
     }
 
-    .preview-tile.active {
-      border-width: 3px;
-      transform: scale(1.02);
-    }
-
     @media (max-width: 520px) {
       .lulu-top-row {
         flex-direction: column;
@@ -653,7 +605,7 @@
         gap: 12px;
       }
       .card-illustration-box {
-        height: 132px;
+        height: 142px;
       }
     }
   </style>
@@ -672,7 +624,7 @@
         <img class="app-logo" src="./app/src/main/res/drawable/img_app_icon_1794072206224.jpg" alt="Logo" />
         <div class="brand-titles">
           <h1 id="app-title">عالم المرح والتعلّم</h1>
-          <p id="app-subtitle">Fun Learning World • للأطفال ٤–٦ سنوات</p>
+          <p id="app-subtitle">تعلّم والعب مع لولو • ٤ إلى ٦ سنوات</p>
         </div>
       </div>
 
@@ -685,7 +637,7 @@
           🔊 <span id="sound-label">الصوت</span>
         </button>
         <button id="btn-parents" class="btn-3d btn-icon-3d btn-parents" onclick="openParentModal()">
-          👨‍👩‍👧 <span id="parent-label">ركن الأهل</span>
+          👨‍👩‍👧 <span id="parent-label">الأهل</span>
         </button>
       </div>
     </header>
@@ -695,67 +647,65 @@
       <!-- Lulu Hero Welcome Card -->
       <section class="lulu-card">
         <div class="lulu-top-row">
-          <div class="lulu-avatar-wrap" onclick="cycleGreeting()">
-            <img class="lulu-avatar" src="./app/src/main/res/drawable/img_lulu_mascot_1794072207514.jpg" alt="Lulu" />
-            <div class="lulu-badge-star">🌟</div>
-            <div class="lulu-badge-wave">👋</div>
-            <div class="lulu-name-pill" id="lulu-name-pill">صديقتكم لولو</div>
+          <div class="lulu-stage-col" onclick="cycleGreeting()">
+            <div class="lulu-portrait-frame">
+              <img src="./app/src/main/res/drawable/img_lulu_mascot_1794072207514.jpg" alt="Lulu" />
+            </div>
+            <div class="lulu-name-pill" id="lulu-name-pill">✨ صديقتكم لولو</div>
           </div>
 
           <div class="lulu-speech-col">
-            <span class="welcome-tag" id="welcome-tag">أهلاً بكم يا أبطال! 🎉</span>
+            <span class="welcome-tag" id="welcome-tag">مرحباً يا أصدقائي! 🌟</span>
             <div class="speech-bubble" onclick="cycleGreeting()">
               <p class="speech-text" id="lulu-greeting">
-                مرحباً يا بطل! أنا صديقتك لولو 🌟 اختر بطاقة لنبدأ رحلة التعلّم والمرح معاً!
+                أهلاً بكم يا أصدقائي! أنا لولو 🌟 اختاروا قسماً جميلاً لنبدأ التعلّم والمرح معاً!
               </p>
               <div class="speech-hint" id="lulu-hint">
-                🔊 اضغط على كلام لولو لرسالة جديدة 💬
+                🔊 اضغط هنا لسماع رسالة أخرى من لولو
               </div>
             </div>
           </div>
         </div>
 
         <button class="btn-3d btn-start-hero" onclick="startRecommendedCategory()" id="btn-start-hero">
-          🚀 ابدأ التعلّم والمرح الآن!
+          🚀 ابدأ التعلّم الآن!
         </button>
       </section>
 
       <!-- Section Banner -->
       <div class="section-banner">
-        <h2 id="section-heading">✨ أقسام التعلّم والمرح (٨ عوالم)</h2>
+        <h2 id="section-heading">✨ أقسام التعلّم الممتعة</h2>
         <span class="pick-world-pill" id="pick-world-pill">اختر قسماً 🌟</span>
       </div>
 
       <!-- 2-Column Category Cards Grid -->
       <section class="categories-grid" id="categories-grid"></section>
+
+      <!-- Normal Scrolling Bottom Learning Journey Bar (Never covers cards) -->
+      <section class="bottom-journey-bar" onclick="collectBonusStar()">
+        <div class="journey-top-row">
+          <div class="journey-title-group">
+            <div class="trophy-circle">🏆</div>
+            <div>
+              <div id="journey-title" style="font-weight: 900; font-size: 1.2rem;">رحلتي التعليمية</div>
+              <div id="journey-sub" style="font-weight: 700; font-size: 0.9rem; color: var(--soft-slate);">
+                اضغط هنا لمشاهدة نجومك وجوائزك 🌟
+              </div>
+            </div>
+          </div>
+          <div class="journey-stars-pill">
+            ⭐ <span id="stars-counter">12 / 24</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width: 50%;"></div>
+          <span class="progress-label" id="progress-label">50%</span>
+        </div>
+      </section>
     </main>
 
     <!-- CATEGORY PLACEHOLDER VIEW -->
     <section id="category-view" class="hidden" style="display: flex; flex-direction: column; gap: 18px;"></section>
-  </div>
-
-  <!-- Bottom Learning Journey Bar -->
-  <div class="bottom-journey-wrap">
-    <div class="bottom-journey-bar" onclick="collectBonusStar()">
-      <div class="journey-top-row">
-        <div class="journey-title-group">
-          <div class="trophy-circle">🏆</div>
-          <div>
-            <div id="journey-title" style="font-weight: 900; font-size: 1.15rem;">رحلتي التعليمية</div>
-            <div id="journey-sub" style="font-weight: 700; font-size: 0.85rem; color: var(--soft-slate);">
-              اضغط لجمع نجمة تشجيعية في رحلتك 🌟
-            </div>
-          </div>
-        </div>
-        <div class="journey-stars-pill">
-          ⭐ <span id="stars-counter">12 / 24</span>
-        </div>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill" style="width: 50%;"></div>
-        <span class="progress-label" id="progress-label">50%</span>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -765,22 +715,21 @@
         num: 1,
         titleAr: 'الأرقام',
         titleEn: 'Numbers',
-        subAr: 'عدّ وامرح من ١ إلى ٢٠',
-        subEn: 'Count & Play 1 to 20',
-        btnAr: 'هيا نعدّ!',
-        btnEn: "Let's Count!",
-        guideAr: 'أهلاً بك في عالم الأرقام! هنا سنتعلم العدّ من ١ إلى ٢٠ مع النجوم والفواكه اللذيذة!',
-        guideEn: 'Welcome to Numbers World! Here we will learn to count from 1 to 20 with stars and yummy fruits!',
+        subAr: 'تعلّم العدّ بالأرقام الملوّنة',
+        subEn: 'Colorful 3D Numbers',
+        btnAr: 'هيا نعدّ',
+        btnEn: "Let's Count",
+        guideAr: 'أهلاً بك في عالم الأرقام! هيا نعدّ معاً من ١ إلى ١٠ مع النجوم والفواكه الجميلة.',
+        guideEn: "Welcome to Numbers World! Let's count from 1 to 10 together with stars and yummy fruits.",
         bg: '#FFF4D9',
         accent: '#E65100',
         shadow: '#BF360C',
         img: './app/src/main/res/drawable/img_card_numbers_letters_1794072209030.jpg',
-        badges: ['١', '2', '٣'],
         previews: [
           { sym: '١ ٢ ٣', ar: 'الأرقام العربية', en: 'Arabic Numbers', color: '#FFB300' },
           { sym: '1 2 3', ar: 'الأرقام الإنجليزية', en: 'English Numbers', color: '#FB8C00' },
           { sym: '🍎×5', ar: 'عدّ الفواكه', en: 'Count the Fruits', color: '#43A047' },
-          { sym: '🎵 10', ar: 'أغنية الأرقام', en: 'Numbers Song', color: '#1E88E5' }
+          { sym: '🎵 10', ar: 'أنشودة الأرقام', en: 'Numbers Song', color: '#1E88E5' }
         ]
       },
       {
@@ -788,22 +737,21 @@
         num: 2,
         titleAr: 'الحروف العربية',
         titleEn: 'Arabic Letters',
-        subAr: 'حروف الهجاء أ ب ت',
-        subEn: 'Arabic Alphabet أ ب ت',
-        btnAr: 'اقرأ معي!',
-        btnEn: 'Read Now!',
-        guideAr: 'مرحباً بك في بستان الحروف العربية! سنكتشف معاً حروف أ، ب، ت مع الكلمات والصور الجميلة!',
-        guideEn: "Welcome to the Arabic Letters Garden! Together we'll discover Alif, Baa, Taa with joyful words!",
+        subAr: 'مكعبات الحروف أ ب ت',
+        subEn: 'Arabic Alphabet Blocks',
+        btnAr: 'تعلّم الحروف',
+        btnEn: 'Learn Letters',
+        guideAr: 'مرحباً بك في حديقة الحروف العربية! سنتعرّف معاً على مكعبات الحروف أ، ب، ت مع الكلمات المصوّرة.',
+        guideEn: "Welcome to the Arabic Letters Garden! Together we'll discover Alif, Baa, Taa alphabet blocks.",
         bg: '#E0F7FA',
         accent: '#00838F',
         shadow: '#005662',
         img: './app/src/main/res/drawable/img_cat_arabic_letters_1794073876696.jpg',
-        badges: ['أ', 'ب', 'ت'],
         previews: [
-          { sym: 'أ 🦁', ar: 'أرنب وأسد', en: 'Alif Words', color: '#00ACC1' },
-          { sym: 'ب 🦆', ar: 'بطة جميلة', en: 'Baa Words', color: '#26A69A' },
-          { sym: 'ت 🍎', ar: 'تفاحة حمراء', en: 'Taa Words', color: '#EF5350' },
-          { sym: '🎶 أ ب', ar: 'أنشودة الحروف', en: 'Alphabet Nasheed', color: '#7E57C2' }
+          { sym: 'أ 🦁', ar: 'حرف الألف', en: 'Letter Alif', color: '#00ACC1' },
+          { sym: 'ب 🦆', ar: 'حرف الباء', en: 'Letter Baa', color: '#26A69A' },
+          { sym: 'ت 🍎', ar: 'حرف التاء', en: 'Letter Taa', color: '#EF5350' },
+          { sym: '🎶 أ ب', ar: 'أنشودة الحروف', en: 'Alphabet Song', color: '#7E57C2' }
         ]
       },
       {
@@ -811,22 +759,21 @@
         num: 3,
         titleAr: 'الحروف الإنجليزية',
         titleEn: 'English Letters',
-        subAr: 'الحروف من A إلى Z',
-        subEn: 'Letters A to Z',
-        btnAr: 'هيا نكتشف!',
-        btnEn: 'Explore ABC!',
-        guideAr: 'رائع! في جزيرة الحروف الإنجليزية سنتعلم نطق A B C مع أصدقائنا الصغار!',
-        guideEn: 'Awesome! On English Letters Island we will learn phonics for A, B, C with our cute friends!',
+        subAr: 'مكعبات الحروف A B C',
+        subEn: 'Colorful ABC Blocks',
+        btnAr: 'تعلّم ABC',
+        btnEn: 'Explore ABC',
+        guideAr: 'رائع! في عالم الحروف الإنجليزية سنتعلّم نطق الحروف A و B و C مع الصور الملوّنة.',
+        guideEn: 'Awesome! In English Letters World we will learn A, B, and C blocks with colorful pictures.',
         bg: '#FCE4EC',
         accent: '#D81B60',
         shadow: '#880E4F',
         img: './app/src/main/res/drawable/img_cat_english_letters_1794073878108.jpg',
-        badges: ['A', 'B', 'C'],
         previews: [
-          { sym: 'A 🍎', ar: 'Apple & Ant', en: 'Letter A', color: '#E91E63' },
-          { sym: 'B 🦋', ar: 'Butterfly', en: 'Letter B', color: '#8E24AA' },
-          { sym: 'C 🐱', ar: 'Cute Cat', en: 'Letter C', color: '#FF7043' },
-          { sym: '🎵 ABC', ar: 'أغنية ABC', en: 'Phonics Song', color: '#29B6F6' }
+          { sym: 'A 🍎', ar: 'حرف A • تفاحة', en: 'Letter A • Apple', color: '#E91E63' },
+          { sym: 'B 🦋', ar: 'حرف B • فراشة', en: 'Letter B • Butterfly', color: '#8E24AA' },
+          { sym: 'C 🐱', ar: 'حرف C • قطة', en: 'Letter C • Cat', color: '#FF7043' },
+          { sym: '🎵 ABC', ar: 'أنشودة ABC', en: 'ABC Song', color: '#29B6F6' }
         ]
       },
       {
@@ -834,22 +781,21 @@
         num: 4,
         titleAr: 'الألوان',
         titleEn: 'Colors',
-        subAr: 'قوس قزح والألوان الزاهية',
-        subEn: 'Rainbow & Bright Colors',
-        btnAr: 'لوّن عالمك!',
-        btnEn: 'Color Now!',
-        guideAr: 'يا لها من ألوان زاهية! هيا نمزج ألوان قوس قزح ونتعرف على الأحمر والأصفر والأزرق!',
-        guideEn: "What bright colors! Let's mix rainbow colors and discover Red, Yellow, Blue, and Green!",
+        subAr: 'قوس قزح ولوحة الألوان',
+        subEn: 'Rainbow & Paint Palette',
+        btnAr: 'اكتشف الألوان',
+        btnEn: 'Explore Colors',
+        guideAr: 'ما أجمل الألوان! هيا نتعرّف على ألوان قوس قزح: الأحمر، الأصفر، الأزرق، والأخضر.',
+        guideEn: "What lovely colors! Let's discover rainbow colors: Red, Yellow, Blue, and Green.",
         bg: '#F3E5F5',
         accent: '#7B1FA2',
         shadow: '#4A148C',
         img: './app/src/main/res/drawable/img_cat_colors_1794073880642.jpg',
-        badges: ['🌈', '❤️', '💛'],
         previews: [
-          { sym: '❤️', ar: 'الأحمر الزاهي', en: 'Bright Red', color: '#E53935' },
-          { sym: '💙', ar: 'الأزرق السماوي', en: 'Sky Blue', color: '#1E88E5' },
-          { sym: '💛', ar: 'الأصفر المشمس', en: 'Sunny Yellow', color: '#FDD835' },
-          { sym: '🌈', ar: 'ألوان قوس قزح', en: 'Rainbow Mix', color: '#8E24AA' }
+          { sym: '❤️', ar: 'اللون الأحمر', en: 'Red Color', color: '#E53935' },
+          { sym: '💙', ar: 'اللون الأزرق', en: 'Blue Color', color: '#1E88E5' },
+          { sym: '💛', ar: 'اللون الأصفر', en: 'Yellow Color', color: '#FDD835' },
+          { sym: '🌈', ar: 'ألوان قوس قزح', en: 'Rainbow Colors', color: '#8E24AA' }
         ]
       },
       {
@@ -857,22 +803,21 @@
         num: 5,
         titleAr: 'الأشكال',
         titleEn: 'Shapes',
-        subAr: 'الدائرة، المربع والنجمة',
-        subEn: 'Circle, Square & Star',
-        btnAr: 'ركّب الأشكال!',
-        btnEn: 'Match Shapes!',
-        guideAr: 'انظر حولك! الأشكال في كل مكان: الشمس دائرة، والنجوم تتلألأ في السماء!',
-        guideEn: 'Look around! Shapes are everywhere: the sun is a circle, and stars twinkle in the sky!',
+        subAr: 'أشكال هندسية ملوّنة',
+        subEn: 'Colorful Geometric Shapes',
+        btnAr: 'تعرّف على الأشكال',
+        btnEn: 'Match Shapes',
+        guideAr: 'انظر حولك! سنتعرّف معاً على الدائرة، المربع، المثلث، والنجمة اللامعة.',
+        guideEn: "Look around! Together we'll learn the Circle, Square, Triangle, and Shining Star.",
         bg: '#E8F5E9',
         accent: '#2E7D32',
         shadow: '#1B5E20',
         img: './app/src/main/res/drawable/img_cat_shapes_1794073880569.jpg',
-        badges: ['⭐', '🟢', '🔺'],
         previews: [
-          { sym: '🟢', ar: 'الدائرة المرحة', en: 'Happy Circle', color: '#43A047' },
-          { sym: '🟧', ar: 'المربع المتساوي', en: 'Friendly Square', color: '#FB8C00' },
-          { sym: '🔺', ar: 'المثلث الذكي', en: 'Smart Triangle', color: '#E53935' },
-          { sym: '⭐', ar: 'النجمة اللامعة', en: 'Shining Star', color: '#FBC02D' }
+          { sym: '🟢', ar: 'الدائرة', en: 'Circle', color: '#43A047' },
+          { sym: '🟧', ar: 'المربع', en: 'Square', color: '#FB8C00' },
+          { sym: '🔺', ar: 'المثلث', en: 'Triangle', color: '#E53935' },
+          { sym: '⭐', ar: 'النجمة', en: 'Star', color: '#FBC02D' }
         ]
       },
       {
@@ -880,22 +825,21 @@
         num: 6,
         titleAr: 'الحيوانات',
         titleEn: 'Animals',
-        subAr: 'أصوات الحيوانات اللطيفة',
-        subEn: 'Cute Animals & Sounds',
-        btnAr: 'زر الغابة!',
-        btnEn: 'Visit Safari!',
-        guideAr: 'أصدقاؤنا الحيوانات بانتظارك! استمع لصوت الأسد الصغير والزرافة الطويلة والأرنب اللطيف!',
-        guideEn: 'Our animal friends are waiting for you! Listen to the baby lion, tall giraffe, and cute bunny!',
+        subAr: 'حيوانات كرتونية لطيفة',
+        subEn: 'Cute Cartoon Animals',
+        btnAr: 'شاهد الحيوانات',
+        btnEn: 'Meet Animals',
+        guideAr: 'أصدقاؤنا الحيوانات في انتظارك! هيا نتعرّف على الأسد الصغير والزرافة والأرنب اللطيف.',
+        guideEn: "Our animal friends are waiting for you! Let's meet the baby lion, giraffe, and cute bunny.",
         bg: '#FFF8E1',
         accent: '#EF6C00',
         shadow: '#E65100',
         img: './app/src/main/res/drawable/img_card_animals_nature_1794072210949.jpg',
-        badges: ['🦁', '🦒', '🐰'],
         previews: [
-          { sym: '🦁', ar: 'الأسد الشجاع', en: 'Brave Lion', color: '#F57C00' },
+          { sym: '🦁', ar: 'الأسد الصغير', en: 'Baby Lion', color: '#F57C00' },
           { sym: '🦒', ar: 'الزرافة اللطيفة', en: 'Gentle Giraffe', color: '#FFB300' },
-          { sym: '🐰', ar: 'الأرنب السريع', en: 'Bouncy Bunny', color: '#EC407A' },
-          { sym: '🐘', ar: 'الفيل المرح', en: 'Playful Elephant', color: '#42A5F5' }
+          { sym: '🐰', ar: 'الأرنب المرح', en: 'Happy Bunny', color: '#EC407A' },
+          { sym: '🐘', ar: 'الفيل الصغير', en: 'Little Elephant', color: '#42A5F5' }
         ]
       },
       {
@@ -903,22 +847,21 @@
         num: 7,
         titleAr: 'ألعاب الذكاء',
         titleEn: 'Brain Games',
-        subAr: 'ألغاز وذاكرة وتفكير',
-        subEn: 'Puzzles & Memory Games',
-        btnAr: 'شغّل عقلك!',
-        btnEn: 'Play Puzzle!',
-        guideAr: 'أنت طفل ذكي جداً! هيا نلعب ألعاب الذاكرة وتركيب الصور المسلية معاً!',
-        guideEn: "You are super smart! Let's play memory matching, shadow puzzles, and fun logic games together!",
+        subAr: 'ألغاز وتركيب الصور',
+        subEn: 'Playful Puzzles & Logic',
+        btnAr: 'العب وفكّر',
+        btnEn: 'Play Puzzle',
+        guideAr: 'أنت طفل ذكي! هيا نلعب ألعاب تركيب الصور والذاكرة المسلية معاً.',
+        guideEn: "You are so smart! Let's play jigsaw puzzles and fun memory games together.",
         bg: '#EDE7F6',
         accent: '#512DA8',
         shadow: '#311B92',
         img: './app/src/main/res/drawable/img_cat_brain_games_1794073881867.jpg',
-        badges: ['🧩', '💡', '🏆'],
         previews: [
           { sym: '🧩', ar: 'تركيب الصور', en: 'Jigsaw Puzzle', color: '#5E35B1' },
-          { sym: '🃏', ar: 'بطاقات الذاكرة', en: 'Memory Match', color: '#00897B' },
-          { sym: '🔍', ar: 'ابحث عن الظل', en: 'Shadow Finder', color: '#3949AB' },
-          { sym: '🏆', ar: 'تحدي الأذكياء', en: 'Smart Maze', color: '#D81B60' }
+          { sym: '🃏', ar: 'لعبة الذاكرة', en: 'Memory Match', color: '#00897B' },
+          { sym: '🔍', ar: 'ابحث عن الشكل', en: 'Shape Finder', color: '#3949AB' },
+          { sym: '🏆', ar: 'لغز الأذكياء', en: 'Smart Maze', color: '#D81B60' }
         ]
       },
       {
@@ -926,34 +869,33 @@
         num: 8,
         titleAr: 'الكتابة والرسم',
         titleEn: 'Writing & Drawing',
-        subAr: 'ارسم ولوّن وتتبع الخطوط',
-        subEn: 'Draw, Color & Trace',
-        btnAr: 'ابدأ الرسم!',
-        btnEn: 'Start Drawing!',
-        guideAr: 'أمسك فرشاتك السحرية! هنا سنرسم أجمل اللوحات ونتتبع الحروف والأرقام بألوان قوس قزح!',
-        guideEn: "Grab your magic paintbrush! Here we'll paint wonderful pictures and trace letters in rainbow colors!",
+        subAr: 'أقلام الرصاص والتلوين',
+        subEn: 'Pencils, Crayons & Art',
+        btnAr: 'ابدأ الرسم',
+        btnEn: 'Start Drawing',
+        guideAr: 'أمسك أقلام التلوين! هنا سنتدرّب على رسم الخطوط وتلوين الرسومات الجميلة.',
+        guideEn: "Grab your pencils and crayons! Here we'll trace lines and color wonderful pictures.",
         bg: '#E0F2F1',
         accent: '#00695C',
         shadow: '#004D40',
         img: './app/src/main/res/drawable/img_card_art_shapes_1794072210824.jpg',
-        badges: ['🖌️', '🖍️', '🎨'],
         previews: [
-          { sym: '✏️', ar: 'تتبع الخطوط', en: 'Line Tracing', color: '#00897B' },
-          { sym: '🖍️', ar: 'دفتر التلوين', en: 'Coloring Book', color: '#E91E63' },
-          { sym: '🖌️', ar: 'اللوحة الحرة', en: 'Free Canvas', color: '#7B1FA2' },
-          { sym: '✨', ar: 'فرشاة النجوم', en: 'Magic Sparkle Brush', color: '#FBC02D' }
+          { sym: '✏️', ar: 'تتبّع الخطوط', en: 'Line Tracing', color: '#00897B' },
+          { sym: '🖍️', ar: 'أقلام التلوين', en: 'Crayon Coloring', color: '#E91E63' },
+          { sym: '🖌️', ar: 'الرسم الحر', en: 'Free Drawing', color: '#7B1FA2' },
+          { sym: '✨', ar: 'تلوين الأشكال', en: 'Color the Shapes', color: '#FBC02D' }
         ]
       }
     ];
 
     const greetingsAr = [
-      'مرحباً يا بطل! أنا صديقتك لولو 🌟 اختر بطاقة لنبدأ رحلة التعلّم والمرح معاً!',
-      'يا له من يوم مشمس وجميل! 🌈 أي مغامرة تحب أن نستكشفها اليوم؟',
-      'أنت رائع! ⭐ اجمع النجوم الذهبية في كل قسم لتكمل رحلتك التعليمية!'
+      'أهلاً بكم يا أصدقائي! أنا لولو 🌟 اختاروا قسماً جميلاً لنبدأ التعلّم والمرح معاً!',
+      'يا له من يوم مشمس وجميل! 🌈 أي عالم تحبون أن نستكشفه اليوم؟',
+      'أنتم رائعون! ⭐ اجمعوا النجوم الذهبية في كل قسم خلال رحلتكم التعليمية!'
     ];
     const greetingsEn = [
-      "Hello little explorer! I'm your friend Lulu 🌟 Pick a card to start our fun learning adventure!",
-      'What a sunny and joyful day! 🌈 Which magical world would you like to explore today?',
+      "Hello my friends! I'm Lulu 🌟 Pick a colorful world below to start learning and playing together!",
+      'What a sunny and joyful day! 🌈 Which fun learning category would you like to explore today?',
       "You're doing amazing! ⭐ Collect golden stars in every category on your learning journey!"
     ];
 
@@ -1054,29 +996,28 @@
 
       document.getElementById('app-title').textContent = isAr ? 'عالم المرح والتعلّم' : 'Fun Learning World';
       document.getElementById('app-subtitle').textContent = isAr
-        ? 'Fun Learning World • للأطفال ٤–٦ سنوات'
-        : 'عالم المرح والتعلّم • Kids Ages 4–6';
+        ? 'تعلّم والعب مع لولو • ٤ إلى ٦ سنوات'
+        : 'Learn & Play with Lulu • Ages 4–6';
 
       const soundBtn = document.getElementById('btn-sound');
       soundBtn.className = 'btn-3d btn-icon-3d ' + (state.sound ? 'btn-sound-on' : 'btn-sound-off');
       soundBtn.innerHTML = (state.sound ? '🔊 ' : '🔇 ') + (isAr ? 'الصوت' : 'Sound');
 
-      document.getElementById('parent-label').textContent = isAr ? 'ركن الأهل' : 'Parents';
-      document.getElementById('lulu-name-pill').textContent = isAr ? 'صديقتكم لولو' : 'Lulu • لولو';
-      document.getElementById('welcome-tag').textContent = isAr ? 'أهلاً بكم يا أبطال! 🎉' : 'Welcome Little Explorers! 🎉';
+      document.getElementById('parent-label').textContent = isAr ? 'الأهل' : 'Parents';
+      document.getElementById('lulu-name-pill').textContent = isAr ? '✨ صديقتكم لولو' : '✨ Lulu • لولو';
+      document.getElementById('welcome-tag').textContent = isAr ? 'مرحباً يا أصدقائي! 🌟' : 'Hello My Friends! 🌟';
       document.getElementById('lulu-greeting').textContent = isAr ? greetingsAr[state.greetingIdx] : greetingsEn[state.greetingIdx];
       document.getElementById('lulu-hint').textContent = isAr
-        ? '🔊 اضغط على كلام لولو لرسالة جديدة 💬'
-        : "🔊 Tap Lulu's bubble for a new tip 💬";
+        ? '🔊 اضغط هنا لسماع رسالة أخرى من لولو'
+        : '🔊 Tap here for another message from Lulu';
       document.getElementById('btn-start-hero').textContent = isAr
-        ? '🚀 ابدأ التعلّم والمرح الآن!'
-        : '🚀 Start Learning & Playing Now!';
+        ? '🚀 ابدأ التعلّم الآن!'
+        : '🚀 Start Learning Now!';
       document.getElementById('section-heading').textContent = isAr
-        ? '✨ أقسام التعلّم والمرح (٨ عوالم)'
-        : '✨ Learning & Fun Worlds (8 Categories)';
-      document.getElementById('pick-world-pill').textContent = isAr ? 'اختر قسماً 🌟' : 'Pick a World 🌟';
+        ? '✨ أقسام التعلّم الممتعة'
+        : '✨ Fun Learning Categories';
+      document.getElementById('pick-world-pill').textContent = isAr ? 'اختر قسماً 🌟' : 'Pick a Category 🌟';
 
-      // Render 8 Category Cards
       const grid = document.getElementById('categories-grid');
       grid.innerHTML = categories.map(cat => {
         const earned = state.stars[cat.id] || 1;
@@ -1085,19 +1026,15 @@
         const secTitle = isAr ? cat.titleEn : cat.titleAr;
         const sub = isAr ? cat.subAr : cat.subEn;
         const btn = isAr ? cat.btnAr : cat.btnEn;
-        const chips = cat.badges.map(b =>
-          `<span class="floating-chip" style="color:${cat.shadow}; border:1.5px solid ${cat.accent};">${b}</span>`
-        ).join('');
 
         return `
           <article class="category-card" style="background:${cat.bg}; box-shadow: 0 8px 0 ${cat.shadow};" onclick="openCategory('${cat.id}')">
+            <div class="card-header-row">
+              <span class="cat-num-badge" style="background:${cat.accent};">#${cat.num}</span>
+              <span class="cat-stars-badge">${starsHtml}</span>
+            </div>
             <div class="card-illustration-box">
               <img src="${cat.img}" alt="${title}" />
-              <div class="card-top-badges">
-                <span class="cat-num-badge" style="background:${cat.accent};">#${cat.num}</span>
-                <span class="cat-stars-badge">${starsHtml}</span>
-              </div>
-              <div class="card-bottom-chips">${chips}</div>
             </div>
             <h3 class="card-title">${title}</h3>
             <span class="card-secondary-pill" style="color:${cat.shadow}; border:1px solid ${cat.accent}55;">${secTitle}</span>
@@ -1109,7 +1046,6 @@
         `;
       }).join('');
 
-      // Toggle Home vs Category Placeholder Screen
       const homeView = document.getElementById('home-view');
       const catView = document.getElementById('category-view');
       if (!state.activeCategory) {
@@ -1141,7 +1077,7 @@
           </div>
 
           <div class="placeholder-card" style="background:${cat.bg}; box-shadow: 0 10px 0 ${cat.shadow};">
-            <div class="card-illustration-box" style="height:210px;">
+            <div class="card-illustration-box" style="height:220px;">
               <img src="${cat.img}" alt="${title}" />
             </div>
             <h2 style="font-size:2rem; font-weight:900;">${title}</h2>
@@ -1169,14 +1105,13 @@
         `;
       }
 
-      // Update Bottom Learning Journey Bar
       const totalStars = Object.values(state.stars).reduce((a, b) => a + b, 0);
       const maxStars = categories.length * 3;
       const pct = Math.round((totalStars / maxStars) * 100);
       document.getElementById('journey-title').textContent = isAr ? 'رحلتي التعليمية' : 'My Learning Journey';
       document.getElementById('journey-sub').textContent = isAr
-        ? 'اضغط لجمع نجمة تشجيعية في رحلتك 🌟'
-        : 'Tap to collect a bonus star on your journey 🌟';
+        ? 'اضغط هنا لمشاهدة نجومك وجوائزك 🌟'
+        : 'Tap here to view your stars & rewards 🌟';
       document.getElementById('stars-counter').textContent = `${totalStars} / ${maxStars}`;
       document.getElementById('progress-fill').style.width = `${Math.max(10, pct)}%`;
       document.getElementById('progress-label').textContent = `${pct}%`;

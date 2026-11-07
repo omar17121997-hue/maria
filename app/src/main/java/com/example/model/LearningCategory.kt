@@ -2,7 +2,6 @@ package com.example.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Extension
@@ -95,23 +94,23 @@ object LearningCategoriesCatalog {
             numberIndex = 1,
             titleAr = "الأرقام",
             titleEn = "Numbers",
-            subtitleAr = "عدّ وامرح من ١ إلى ٢٠",
-            subtitleEn = "Count & Play 1 to 20",
-            buttonLabelAr = "هيا نعدّ!",
-            buttonLabelEn = "Let's Count!",
-            luluGuideAr = "أهلاً بك في عالم الأرقام! هنا سنتعلم العدّ من ١ إلى ٢٠ مع النجوم والفواكه اللذيذة!",
-            luluGuideEn = "Welcome to Numbers World! Here we will learn to count from 1 to 20 with stars and yummy fruits!",
+            subtitleAr = "تعلّم العدّ بالأرقام الملوّنة",
+            subtitleEn = "Colorful 3D Numbers",
+            buttonLabelAr = "هيا نعدّ",
+            buttonLabelEn = "Let's Count",
+            luluGuideAr = "أهلاً بك في عالم الأرقام! هيا نعدّ معاً من ١ إلى ١٠ مع النجوم والفواكه الجميلة.",
+            luluGuideEn = "Welcome to Numbers World! Let's count from 1 to 10 together with stars and yummy fruits.",
             cardBgColor = NumbersCardBg,
             accentColor = NumbersAccent,
             shadowColor = NumbersShadow,
             icon = Icons.Filled.Filter1,
             illustrationResId = R.drawable.img_card_numbers_letters_1794072209030,
-            floatingBadges = listOf("١", "2", "٣"),
+            floatingBadges = listOf("١", "٢", "٣"),
             previewItems = listOf(
                 PreviewActivityItem("١ ٢ ٣", "الأرقام العربية", "Arabic Numbers", Color(0xFFFFB300)),
                 PreviewActivityItem("1 2 3", "الأرقام الإنجليزية", "English Numbers", Color(0xFFFB8C00)),
                 PreviewActivityItem("🍎×5", "عدّ الفواكه", "Count the Fruits", Color(0xFF43A047)),
-                PreviewActivityItem("🎵 10", "أغنية الأرقام", "Numbers Song", Color(0xFF1E88E5))
+                PreviewActivityItem("🎵 10", "أنشودة الأرقام", "Numbers Song", Color(0xFF1E88E5))
             )
         ),
         LearningCategory(
@@ -119,12 +118,12 @@ object LearningCategoriesCatalog {
             numberIndex = 2,
             titleAr = "الحروف العربية",
             titleEn = "Arabic Letters",
-            subtitleAr = "حروف الهجاء أ ب ت",
-            subtitleEn = "Arabic Alphabet أ ب ت",
-            buttonLabelAr = "اقرأ معي!",
-            buttonLabelEn = "Read Now!",
-            luluGuideAr = "مرحباً بك في بستان الحروف العربية! سنكتشف معاً حروف أ، ب، ت مع الكلمات والصور الجميلة!",
-            luluGuideEn = "Welcome to the Arabic Letters Garden! Together we'll discover Alif, Baa, Taa with joyful words!",
+            subtitleAr = "مكعبات الحروف أ ب ت",
+            subtitleEn = "Arabic Alphabet Blocks",
+            buttonLabelAr = "تعلّم الحروف",
+            buttonLabelEn = "Learn Letters",
+            luluGuideAr = "مرحباً بك في حديقة الحروف العربية! سنتعرّف معاً على مكعبات الحروف أ، ب، ت مع الكلمات المصوّرة.",
+            luluGuideEn = "Welcome to the Arabic Letters Garden! Together we'll discover Alif, Baa, Taa alphabet blocks.",
             cardBgColor = ArabicCardBg,
             accentColor = ArabicAccent,
             shadowColor = ArabicShadow,
@@ -132,10 +131,10 @@ object LearningCategoriesCatalog {
             illustrationResId = R.drawable.img_cat_arabic_letters_1794073876696,
             floatingBadges = listOf("أ", "ب", "ت"),
             previewItems = listOf(
-                PreviewActivityItem("أ 🦁", "أرنب وأسد", "Alif Words", Color(0xFF00ACC1)),
-                PreviewActivityItem("ب 🦆", "بطة جميلة", "Baa Words", Color(0xFF26A69A)),
-                PreviewActivityItem("ت 🍎", "تفاحة حمراء", "Taa Words", Color(0xFFEF5350)),
-                PreviewActivityItem("🎶 أ ب", "أنشودة الحروف", "Alphabet Nasheed", Color(0xFF7E57C2))
+                PreviewActivityItem("أ 🦁", "حرف الألف", "Letter Alif", Color(0xFF00ACC1)),
+                PreviewActivityItem("ب 🦆", "حرف الباء", "Letter Baa", Color(0xFF26A69A)),
+                PreviewActivityItem("ت 🍎", "حرف التاء", "Letter Taa", Color(0xFFEF5350)),
+                PreviewActivityItem("🎶 أ ب", "أنشودة الحروف", "Alphabet Song", Color(0xFF7E57C2))
             )
         ),
         LearningCategory(
@@ -143,12 +142,12 @@ object LearningCategoriesCatalog {
             numberIndex = 3,
             titleAr = "الحروف الإنجليزية",
             titleEn = "English Letters",
-            subtitleAr = "الحروف من A إلى Z",
-            subtitleEn = "Letters A to Z",
-            buttonLabelAr = "هيا نكتشف!",
-            buttonLabelEn = "Explore ABC!",
-            luluGuideAr = "رائع! في جزيرة الحروف الإنجليزية سنتعلم نطق A B C مع أصدقائنا الصغار!",
-            luluGuideEn = "Awesome! On English Letters Island we will learn phonics for A, B, C with our cute friends!",
+            subtitleAr = "مكعبات الحروف A B C",
+            subtitleEn = "Colorful ABC Blocks",
+            buttonLabelAr = "تعلّم ABC",
+            buttonLabelEn = "Explore ABC",
+            luluGuideAr = "رائع! في عالم الحروف الإنجليزية سنتعلّم نطق الحروف A و B و C مع الصور الملوّنة.",
+            luluGuideEn = "Awesome! In English Letters World we will learn A, B, and C blocks with colorful pictures.",
             cardBgColor = EnglishCardBg,
             accentColor = EnglishAccent,
             shadowColor = EnglishShadow,
@@ -156,10 +155,10 @@ object LearningCategoriesCatalog {
             illustrationResId = R.drawable.img_cat_english_letters_1794073878108,
             floatingBadges = listOf("A", "B", "C"),
             previewItems = listOf(
-                PreviewActivityItem("A 🍎", "Apple & Ant", "Letter A", Color(0xFFE91E63)),
-                PreviewActivityItem("B 🦋", "Butterfly", "Letter B", Color(0xFF8E24AA)),
-                PreviewActivityItem("C 🐱", "Cute Cat", "Letter C", Color(0xFFFF7043)),
-                PreviewActivityItem("🎵 ABC", "أغنية ABC", "Phonics Song", Color(0xFF29B6F6))
+                PreviewActivityItem("A 🍎", "حرف A • تفاحة", "Letter A • Apple", Color(0xFFE91E63)),
+                PreviewActivityItem("B 🦋", "حرف B • فراشة", "Letter B • Butterfly", Color(0xFF8E24AA)),
+                PreviewActivityItem("C 🐱", "حرف C • قطة", "Letter C • Cat", Color(0xFFFF7043)),
+                PreviewActivityItem("🎵 ABC", "أنشودة ABC", "ABC Song", Color(0xFF29B6F6))
             )
         ),
         LearningCategory(
@@ -167,23 +166,23 @@ object LearningCategoriesCatalog {
             numberIndex = 4,
             titleAr = "الألوان",
             titleEn = "Colors",
-            subtitleAr = "قوس قزح والألوان الزاهية",
-            subtitleEn = "Rainbow & Bright Colors",
-            buttonLabelAr = "لوّن عالمك!",
-            buttonLabelEn = "Color Now!",
-            luluGuideAr = "يا لها من ألوان زاهية! هيا نمزج ألوان قوس قزح ونتعرف على الأحمر والأصفر والأزرق!",
-            luluGuideEn = "What bright colors! Let's mix rainbow colors and discover Red, Yellow, Blue, and Green!",
+            subtitleAr = "قوس قزح ولوحة الألوان",
+            subtitleEn = "Rainbow & Paint Palette",
+            buttonLabelAr = "اكتشف الألوان",
+            buttonLabelEn = "Explore Colors",
+            luluGuideAr = "ما أجمل الألوان! هيا نتعرّف على ألوان قوس قزح: الأحمر، الأصفر، الأزرق، والأخضر.",
+            luluGuideEn = "What lovely colors! Let's discover rainbow colors: Red, Yellow, Blue, and Green.",
             cardBgColor = ColorsCardBg,
             accentColor = ColorsAccent,
             shadowColor = ColorsShadow,
             icon = Icons.Filled.Palette,
             illustrationResId = R.drawable.img_cat_colors_1794073880642,
-            floatingBadges = listOf("🌈", "❤️", "💛"),
+            floatingBadges = listOf("🌈", "🎨", "❤️"),
             previewItems = listOf(
-                PreviewActivityItem("❤️", "الأحمر الزاهي", "Bright Red", Color(0xFFE53935)),
-                PreviewActivityItem("💙", "الأزرق السماوي", "Sky Blue", Color(0xFF1E88E5)),
-                PreviewActivityItem("💛", "الأصفر المشمس", "Sunny Yellow", Color(0xFFFDD835)),
-                PreviewActivityItem("🌈", "ألوان قوس قزح", "Rainbow Mix", Color(0xFF8E24AA))
+                PreviewActivityItem("❤️", "اللون الأحمر", "Red Color", Color(0xFFE53935)),
+                PreviewActivityItem("💙", "اللون الأزرق", "Blue Color", Color(0xFF1E88E5)),
+                PreviewActivityItem("💛", "اللون الأصفر", "Yellow Color", Color(0xFFFDD835)),
+                PreviewActivityItem("🌈", "ألوان قوس قزح", "Rainbow Colors", Color(0xFF8E24AA))
             )
         ),
         LearningCategory(
@@ -191,12 +190,12 @@ object LearningCategoriesCatalog {
             numberIndex = 5,
             titleAr = "الأشكال",
             titleEn = "Shapes",
-            subtitleAr = "الدائرة، المربع والنجمة",
-            subtitleEn = "Circle, Square & Star",
-            buttonLabelAr = "ركّب الأشكال!",
-            buttonLabelEn = "Match Shapes!",
-            luluGuideAr = "انظر حولك! الأشكال في كل مكان: الشمس دائرة، والنجوم تتلألأ في السماء!",
-            luluGuideEn = "Look around! Shapes are everywhere: the sun is a circle, and stars twinkle in the sky!",
+            subtitleAr = "أشكال هندسية ملوّنة",
+            subtitleEn = "Colorful Geometric Shapes",
+            buttonLabelAr = "تعرّف على الأشكال",
+            buttonLabelEn = "Match Shapes",
+            luluGuideAr = "انظر حولك! سنتعرّف معاً على الدائرة، المربع، المثلث، والنجمة اللامعة.",
+            luluGuideEn = "Look around! Together we'll learn the Circle, Square, Triangle, and Shining Star.",
             cardBgColor = ShapesCardBg,
             accentColor = ShapesAccent,
             shadowColor = ShapesShadow,
@@ -204,10 +203,10 @@ object LearningCategoriesCatalog {
             illustrationResId = R.drawable.img_cat_shapes_1794073880569,
             floatingBadges = listOf("⭐", "🟢", "🔺"),
             previewItems = listOf(
-                PreviewActivityItem("🟢", "الدائرة المرحة", "Happy Circle", Color(0xFF43A047)),
-                PreviewActivityItem("🟧", "المربع المتساوي", "Friendly Square", Color(0xFFFB8C00)),
-                PreviewActivityItem("🔺", "المثلث الذكي", "Smart Triangle", Color(0xFFE53935)),
-                PreviewActivityItem("⭐", "النجمة اللامعة", "Shining Star", Color(0xFFFBC02D))
+                PreviewActivityItem("🟢", "الدائرة", "Circle", Color(0xFF43A047)),
+                PreviewActivityItem("🟧", "المربع", "Square", Color(0xFFFB8C00)),
+                PreviewActivityItem("🔺", "المثلث", "Triangle", Color(0xFFE53935)),
+                PreviewActivityItem("⭐", "النجمة", "Star", Color(0xFFFBC02D))
             )
         ),
         LearningCategory(
@@ -215,12 +214,12 @@ object LearningCategoriesCatalog {
             numberIndex = 6,
             titleAr = "الحيوانات",
             titleEn = "Animals",
-            subtitleAr = "أصوات الحيوانات اللطيفة",
-            subtitleEn = "Cute Animals & Sounds",
-            buttonLabelAr = "زر الغابة!",
-            buttonLabelEn = "Visit Safari!",
-            luluGuideAr = "أصدقاؤنا الحيوانات بانتظارك! استمع لصوت الأسد الصغير والزرافة الطويلة والأرنب اللطيف!",
-            luluGuideEn = "Our animal friends are waiting for you! Listen to the baby lion, tall giraffe, and cute bunny!",
+            subtitleAr = "حيوانات كرتونية لطيفة",
+            subtitleEn = "Cute Cartoon Animals",
+            buttonLabelAr = "شاهد الحيوانات",
+            buttonLabelEn = "Meet Animals",
+            luluGuideAr = "أصدقاؤنا الحيوانات في انتظارك! هيا نتعرّف على الأسد الصغير والزرافة والأرنب اللطيف.",
+            luluGuideEn = "Our animal friends are waiting for you! Let's meet the baby lion, giraffe, and cute bunny.",
             cardBgColor = AnimalsCardBg,
             accentColor = AnimalsAccent,
             shadowColor = AnimalsShadow,
@@ -228,10 +227,10 @@ object LearningCategoriesCatalog {
             illustrationResId = R.drawable.img_card_animals_nature_1794072210949,
             floatingBadges = listOf("🦁", "🦒", "🐰"),
             previewItems = listOf(
-                PreviewActivityItem("🦁", "الأسد الشجاع", "Brave Lion", Color(0xFFF57C00)),
+                PreviewActivityItem("🦁", "الأسد الصغير", "Baby Lion", Color(0xFFF57C00)),
                 PreviewActivityItem("🦒", "الزرافة اللطيفة", "Gentle Giraffe", Color(0xFFFFB300)),
-                PreviewActivityItem("🐰", "الأرنب السريع", "Bouncy Bunny", Color(0xFFEC407A)),
-                PreviewActivityItem("🐘", "الفيل المرح", "Playful Elephant", Color(0xFF42A5F5))
+                PreviewActivityItem("🐰", "الأرنب المرح", "Happy Bunny", Color(0xFFEC407A)),
+                PreviewActivityItem("🐘", "الفيل الصغير", "Little Elephant", Color(0xFF42A5F5))
             )
         ),
         LearningCategory(
@@ -239,12 +238,12 @@ object LearningCategoriesCatalog {
             numberIndex = 7,
             titleAr = "ألعاب الذكاء",
             titleEn = "Brain Games",
-            subtitleAr = "ألغاز وذاكرة وتفكير",
-            subtitleEn = "Puzzles & Memory Games",
-            buttonLabelAr = "شغّل عقلك!",
-            buttonLabelEn = "Play Puzzle!",
-            luluGuideAr = "أنت طفل ذكي جداً! هيا نلعب ألعاب الذاكرة وتركيب الصور المسلية معاً!",
-            luluGuideEn = "You are super smart! Let's play memory matching, shadow puzzles, and fun logic games together!",
+            subtitleAr = "ألغاز وتركيب الصور",
+            subtitleEn = "Playful Puzzles & Logic",
+            buttonLabelAr = "العب وفكّر",
+            buttonLabelEn = "Play Puzzle",
+            luluGuideAr = "أنت طفل ذكي! هيا نلعب ألعاب تركيب الصور والذاكرة المسلية معاً.",
+            luluGuideEn = "You are so smart! Let's play jigsaw puzzles and fun memory games together.",
             cardBgColor = BrainCardBg,
             accentColor = BrainAccent,
             shadowColor = BrainShadow,
@@ -253,9 +252,9 @@ object LearningCategoriesCatalog {
             floatingBadges = listOf("🧩", "💡", "🏆"),
             previewItems = listOf(
                 PreviewActivityItem("🧩", "تركيب الصور", "Jigsaw Puzzle", Color(0xFF5E35B1)),
-                PreviewActivityItem("🃏", "بطاقات الذاكرة", "Memory Match", Color(0xFF00897B)),
-                PreviewActivityItem("🔍", "ابحث عن الظل", "Shadow Finder", Color(0xFF3949AB)),
-                PreviewActivityItem("🏆", "تحدي الأذكياء", "Smart Maze", Color(0xFFD81B60))
+                PreviewActivityItem("🃏", "لعبة الذاكرة", "Memory Match", Color(0xFF00897B)),
+                PreviewActivityItem("🔍", "ابحث عن الشكل", "Shape Finder", Color(0xFF3949AB)),
+                PreviewActivityItem("🏆", "لغز الأذكياء", "Smart Maze", Color(0xFFD81B60))
             )
         ),
         LearningCategory(
@@ -263,36 +262,36 @@ object LearningCategoriesCatalog {
             numberIndex = 8,
             titleAr = "الكتابة والرسم",
             titleEn = "Writing & Drawing",
-            subtitleAr = "ارسم ولوّن وتتبع الخطوط",
-            subtitleEn = "Draw, Color & Trace",
-            buttonLabelAr = "ابدأ الرسم!",
-            buttonLabelEn = "Start Drawing!",
-            luluGuideAr = "أمسك فرشاتك السحرية! هنا سنرسم أجمل اللوحات ونتتبع الحروف والأرقام بألوان قوس قزح!",
-            luluGuideEn = "Grab your magic paintbrush! Here we'll paint wonderful pictures and trace letters in rainbow colors!",
+            subtitleAr = "أقلام الرصاص والتلوين",
+            subtitleEn = "Pencils, Crayons & Art",
+            buttonLabelAr = "ابدأ الرسم",
+            buttonLabelEn = "Start Drawing",
+            luluGuideAr = "أمسك أقلام التلوين! هنا سنتدرّب على رسم الخطوط وتلوين الرسومات الجميلة.",
+            luluGuideEn = "Grab your pencils and crayons! Here we'll trace lines and color wonderful pictures.",
             cardBgColor = DrawingCardBg,
             accentColor = DrawingAccent,
             shadowColor = DrawingShadow,
             icon = Icons.Filled.Brush,
             illustrationResId = R.drawable.img_card_art_shapes_1794072210824,
-            floatingBadges = listOf("🖌️", "🖍️", "🎨"),
+            floatingBadges = listOf("✏️", "🖍️", "🎨"),
             previewItems = listOf(
-                PreviewActivityItem("✏️", "تتبع الخطوط", "Line Tracing", Color(0xFF00897B)),
-                PreviewActivityItem("🖍️", "دفتر التلوين", "Coloring Book", Color(0xFFE91E63)),
-                PreviewActivityItem("🖌️", "اللوحة الحرة", "Free Canvas", Color(0xFF7B1FA2)),
-                PreviewActivityItem("✨", "فرشاة النجوم", "Magic Sparkle Brush", Color(0xFFFBC02D))
+                PreviewActivityItem("✏️", "تتبّع الخطوط", "Line Tracing", Color(0xFF00897B)),
+                PreviewActivityItem("🖍️", "أقلام التلوين", "Crayon Coloring", Color(0xFFE91E63)),
+                PreviewActivityItem("🖌️", "الرسم الحر", "Free Drawing", Color(0xFF7B1FA2)),
+                PreviewActivityItem("✨", "تلوين الأشكال", "Color the Shapes", Color(0xFFFBC02D))
             )
         )
     )
 
     val luluGreetingsAr = listOf(
-        "مرحباً يا بطل! أنا صديقتك لولو 🌟 اختر بطاقة لنبدأ رحلة التعلّم والمرح معاً!",
-        "يا له من يوم مشمس وجميل! 🌈 أي مغامرة تحب أن نستكشفها اليوم؟",
-        "أنت رائع! ⭐ اجمع النجوم الذهبية في كل قسم لتكمل رحلتك التعليمية!"
+        "أهلاً بكم يا أصدقائي! أنا لولو 🌟 اختاروا قسماً جميلاً لنبدأ التعلّم والمرح معاً!",
+        "يا له من يوم مشمس وجميل! 🌈 أي عالم تحبون أن نستكشفه اليوم؟",
+        "أنتم رائعون! ⭐ اجمعوا النجوم الذهبية في كل قسم خلال رحلتكم التعليمية!"
     )
 
     val luluGreetingsEn = listOf(
-        "Hello little explorer! I'm your friend Lulu 🌟 Pick a card to start our fun learning adventure!",
-        "What a sunny and joyful day! 🌈 Which magical world would you like to explore today?",
+        "Hello my friends! I'm Lulu 🌟 Pick a colorful world below to start learning and playing together!",
+        "What a sunny and joyful day! 🌈 Which fun learning category would you like to explore today?",
         "You're doing amazing! ⭐ Collect golden stars in every category on your learning journey!"
     )
 }
