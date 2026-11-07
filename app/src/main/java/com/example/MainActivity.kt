@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.model.CategoryId
 import com.example.ui.AppDestination
 import com.example.ui.FunLearningUiState
 import com.example.ui.FunLearningViewModel
@@ -23,6 +24,7 @@ import com.example.ui.screens.CategoryPlaceholderScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LearningJourneyModal
 import com.example.ui.screens.ParentSectionDialog
+import com.example.ui.screens.numbers.NumbersWorldScreen
 import com.example.ui.theme.FunLearningWorldTheme
 
 class MainActivity : ComponentActivity() {
@@ -71,18 +73,29 @@ fun FunLearningWorldApp(
                 }
 
                 is AppDestination.CategoryScreen -> {
-                    val category = uiState.getCategory(destination.categoryId)
-                    val earnedStars = uiState.settings.categoryStars[destination.categoryId] ?: 1
-                    CategoryPlaceholderScreen(
-                        category = category,
-                        language = uiState.settings.language,
-                        soundEnabled = uiState.settings.soundEnabled,
-                        earnedStars = earnedStars,
-                        onNavigateHome = viewModel::navigateHome,
-                        onSelectLanguage = viewModel::selectLanguage,
-                        onToggleSound = viewModel::toggleSound,
-                        onCollectStar = { viewModel.collectPreviewStar(destination.categoryId) }
-                    )
+                    if (destination.categoryId == CategoryId.NUMBERS) {
+                        NumbersWorldScreen(
+                            uiState = uiState,
+                            onNavigateHome = viewModel::navigateHome,
+                            onSelectLanguage = viewModel::selectLanguage,
+                            onToggleSound = viewModel::toggleSound,
+                            onSpeakLulu = viewModel::speakLulu,
+                            onCompleteActivity = viewModel::completeNumbersActivity
+                        )
+                    } else {
+                        val category = uiState.getCategory(destination.categoryId)
+                        val earnedStars = uiState.settings.categoryStars[destination.categoryId] ?: 1
+                        CategoryPlaceholderScreen(
+                            category = category,
+                            language = uiState.settings.language,
+                            soundEnabled = uiState.settings.soundEnabled,
+                            earnedStars = earnedStars,
+                            onNavigateHome = viewModel::navigateHome,
+                            onSelectLanguage = viewModel::selectLanguage,
+                            onToggleSound = viewModel::toggleSound,
+                            onCollectStar = { viewModel.collectPreviewStar(destination.categoryId) }
+                        )
+                    }
                 }
             }
         }

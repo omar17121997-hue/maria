@@ -9,6 +9,8 @@ import com.example.model.AppLanguage
 import com.example.model.CategoryId
 import com.example.model.LearningCategoriesCatalog
 import com.example.model.LearningCategory
+import com.example.model.NumbersActivityId
+import com.example.util.LuluVoiceHelper
 import com.example.util.SoundEffectsHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -50,6 +52,7 @@ data class FunLearningUiState(
 class FunLearningViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = UserPreferencesRepository(application.applicationContext)
+    private val voiceHelper = LuluVoiceHelper(application.applicationContext)
 
     private val _destination = MutableStateFlow<AppDestination>(AppDestination.Home)
     private val _luluGreetingIndex = MutableStateFlow(0)
@@ -79,10 +82,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
     fun toggleLanguage() {
         val current = uiState.value.settings.language
         val next = if (current == AppLanguage.AR) AppLanguage.EN else AppLanguage.AR
-        SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
-        viewModelScope.launch {
-            repository.setLanguage(next)
-        }
+        selectLanguage(next)
     }
 
     fun selectLanguage(language: AppLanguage) {
@@ -97,6 +97,8 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         val nextEnabled = !uiState.value.settings.soundEnabled
         if (nextEnabled) {
             SoundEffectsHelper.playHappyMelody(true)
+        } else {
+            voiceHelper.stop()
         }
         viewModelScope.launch {
             repository.setSoundEnabled(nextEnabled)
@@ -104,8 +106,27 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun cycleLuluGreeting() {
-        SoundEffectsHelper.playHappyMelody(uiState.value.settings.soundEnabled)
-        _luluGreetingIndex.value = (_luluGreetingIndex.value + 1) % 3
+        val nextIdx = (_luluGreetingIndex.value + 1) % 3
+        _luluGreetingIndex.value = nextIdx
+        val lang = uiState.value.settings.language
+        val phrase = if (lang == AppLanguage.AR) {
+            LearningCategoriesCatalog.luluGreetingsAr[nextIdx]
+        } else {
+            LearningCategoriesCatalog.luluGreetingsEn[nextIdx]
+        }
+        speakLulu(phrase, lang)
+    }
+
+    fun speakLulu(text: String, language: AppLanguage = uiState.value.settings.language) {
+        voiceHelper.speak(
+            text = text,
+            language = language,
+            soundEnabled = uiState.value.settings.soundEnabled
+        )
+    }
+
+    fun replayLuluVoice() {
+        voiceHelper.replayLast(soundEnabled = uiState.value.settings.soundEnabled)
     }
 
     fun openCategory(categoryId: CategoryId) {
@@ -114,6 +135,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun navigateHome() {
+        voiceHelper.stop()
         SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
         _destination.value = AppDestination.Home
     }
@@ -143,6 +165,13 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun completeNumbersActivity(activityId: NumbersActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markNumbersActivityCompleted(activityId)
+        }
+    }
+
     fun setDailyGoalMinutes(minutes: Int) {
         SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
@@ -162,5 +191,10 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             repository.restoreStarterStars()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        voiceHelper.shutdown()
     }
 }
