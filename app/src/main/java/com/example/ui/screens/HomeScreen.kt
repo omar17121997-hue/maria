@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -32,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +45,8 @@ import com.example.ui.components.LuluMascotWelcomeCard
 import com.example.ui.components.PlayfulSkyBackground
 import com.example.ui.components.TopKidHeaderBar
 import com.example.ui.theme.DeepNavyText
-import com.example.ui.theme.MagicPurple
+import com.example.ui.theme.MagicPurpleDark
+import com.example.ui.theme.StarGoldBorder
 import com.example.ui.theme.SunnyYellow
 
 @Composable
@@ -69,36 +69,38 @@ fun HomeScreen(
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
-            val screenWidth = maxWidth
-            val columns = when {
-                screenWidth >= 840.dp -> 4
-                screenWidth >= 560.dp -> 2
-                else -> 1
-            }
+            val isTablet = maxWidth >= 600.dp
+            val horizontalPad = if (isTablet) 24.dp else 14.dp
+            val gridSpacing = if (isTablet) 20.dp else 14.dp
+
+            // Recommended category for the prominent "Start Learning" button
+            val nextCategory = uiState.categories.firstOrNull {
+                (uiState.settings.categoryStars[it.id] ?: 0) < 3
+            }?.id ?: CategoryId.NUMBERS
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .widthIn(max = 1100.dp)
+                    .widthIn(max = 980.dp)
                     .align(Alignment.TopCenter)
             ) {
-                // Main scrollable content area with Top Header, Lulu Welcome, and Category Cards Grid
+                // Main scrollable content area with 2-Column Card Grid for all 8 Educational Categories
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(columns),
+                    columns = GridCells.Fixed(2),
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
                         .testTag("categories_grid"),
                     contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
+                        start = horizontalPad,
+                        end = horizontalPad,
                         top = 12.dp,
-                        bottom = 20.dp
+                        bottom = 24.dp
                     ),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                    horizontalArrangement = Arrangement.spacedBy(gridSpacing),
+                    verticalArrangement = Arrangement.spacedBy(gridSpacing + 4.dp)
                 ) {
-                    // 1. Top Header Bar (Full Span)
+                    // 1. Top Header Bar (Full 2-Column Span)
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         TopKidHeaderBar(
                             language = language,
@@ -109,21 +111,22 @@ fun HomeScreen(
                         )
                     }
 
-                    // 2. Friendly Welcome Message from Lulu (Full Span)
+                    // 2. Engaging Lulu Welcome Hero Card + Prominent Start Learning Button (Full 2-Column Span)
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         LuluMascotWelcomeCard(
                             greetingText = uiState.currentLuluGreeting,
                             isArabic = isArabic,
-                            onTapLulu = onTapLuluGreeting
+                            onTapLulu = onTapLuluGreeting,
+                            onStartLearning = { onSelectCategory(nextCategory) }
                         )
                     }
 
-                    // 3. Section Header Banner (Full Span)
+                    // 3. Section Header Banner (Full 2-Column Span)
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         SectionTitleBanner(isArabic = isArabic)
                     }
 
-                    // 4. The 8 Learning Category Cards
+                    // 4. All 8 Educational Category Cards in a Beautiful 2-Column Grid
                     items(
                         items = uiState.categories,
                         key = { it.id.key }
@@ -142,7 +145,7 @@ fun HomeScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(horizontal = horizontalPad, vertical = 8.dp)
                         .windowInsetsPadding(WindowInsets.navigationBars)
                 ) {
                     BottomLearningJourneyBar(
@@ -164,49 +167,53 @@ private fun SectionTitleBanner(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        color = Color.White.copy(alpha = 0.85f),
-        border = BorderStroke(1.5.dp, SunnyYellow)
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(4.dp, RoundedCornerShape(22.dp)),
+        shape = RoundedCornerShape(22.dp),
+        color = Color.White,
+        border = BorderStroke(2.dp, StarGoldBorder)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     imageVector = Icons.Filled.AutoAwesome,
                     contentDescription = null,
-                    tint = MagicPurple,
-                    modifier = Modifier.size(22.dp)
+                    tint = MagicPurpleDark,
+                    modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = if (isArabic) "أقسام التعلّم والمرح (٨ عوالم)" else "Learning & Fun Worlds (8 Categories)",
                     color = DeepNavyText,
-                    style = MaterialTheme.typography.titleMedium.copy(
+                    style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = if (isArabic) 21.sp else 19.sp
                     )
                 )
             }
 
             Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = SunnyYellow.copy(alpha = 0.35f)
+                shape = RoundedCornerShape(14.dp),
+                color = SunnyYellow,
+                border = BorderStroke(1.5.dp, StarGoldBorder)
             ) {
                 Text(
                     text = if (isArabic) "اختر قسماً 🌟" else "Pick a World 🌟",
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
                     color = DeepNavyText,
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
+                        fontSize = if (isArabic) 15.sp else 14.sp
                     )
                 )
             }

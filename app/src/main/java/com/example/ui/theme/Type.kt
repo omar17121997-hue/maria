@@ -26,56 +26,56 @@ fun getAppTypography(isArabic: Boolean): Typography {
         displayLarge = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 36.sp,
-            lineHeight = 44.sp
+            fontSize = if (isArabic) 40.sp else 36.sp,
+            lineHeight = if (isArabic) 50.sp else 44.sp
         ),
         displayMedium = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            lineHeight = 38.sp
+            fontSize = if (isArabic) 34.sp else 30.sp,
+            lineHeight = if (isArabic) 44.sp else 38.sp
         ),
         headlineLarge = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 26.sp,
-            lineHeight = 34.sp
+            fontSize = if (isArabic) 29.sp else 26.sp,
+            lineHeight = if (isArabic) 38.sp else 34.sp
         ),
         headlineMedium = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            lineHeight = 30.sp
+            fontSize = if (isArabic) 25.sp else 22.sp,
+            lineHeight = if (isArabic) 34.sp else 30.sp
         ),
         titleLarge = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            lineHeight = 28.sp
+            fontSize = if (isArabic) 23.sp else 20.sp,
+            lineHeight = if (isArabic) 32.sp else 28.sp
         ),
         titleMedium = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            lineHeight = 25.sp
+            fontSize = if (isArabic) 20.sp else 18.sp,
+            lineHeight = if (isArabic) 28.sp else 25.sp
         ),
         bodyLarge = TextStyle(
             fontFamily = primaryFont,
-            fontWeight = FontWeight.Medium,
-            fontSize = 17.sp,
-            lineHeight = 25.sp
+            fontWeight = FontWeight.Bold,
+            fontSize = if (isArabic) 19.sp else 17.sp,
+            lineHeight = if (isArabic) 28.sp else 25.sp
         ),
         bodyMedium = TextStyle(
             fontFamily = primaryFont,
-            fontWeight = FontWeight.Medium,
-            fontSize = 15.sp,
-            lineHeight = 22.sp
+            fontWeight = FontWeight.Bold,
+            fontSize = if (isArabic) 17.sp else 15.sp,
+            lineHeight = if (isArabic) 25.sp else 22.sp
         ),
         labelLarge = TextStyle(
             fontFamily = primaryFont,
             fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            lineHeight = 22.sp
+            fontSize = if (isArabic) 18.sp else 16.sp,
+            lineHeight = if (isArabic) 25.sp else 22.sp
         )
     )
 }
