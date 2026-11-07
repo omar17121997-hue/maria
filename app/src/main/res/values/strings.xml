@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Fun Learning World</string>
+    <string name="app_title_ar">عالم المرح والتعلّم</string>
+    <string name="app_title_en">Fun Learning World</string>
+    <string name="app_subtitle_ar">رحلة ممتعة مع لولو للأطفال (٤–٦ سنوات)</string>
+    <string name="app_subtitle_en">A Joyful Adventure with Lulu (Ages 4–6)</string>
+    <string name="lang_ar">العربية</string>
+    <string name="lang_en">English</string>
+    <string name="sound_on_desc">Sound On</string>
+    <string name="sound_off_desc">Sound Off</string>
+    <string name="parent_section_ar">ركن الأهل</string>
+    <string name="parent_section_en">Parents</string>
+    <string name="home_button_ar">الرئيسية</string>
+    <string name="home_button_en">Home</string>
+</resources>

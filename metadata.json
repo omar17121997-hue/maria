@@ -1,0 +1,6 @@
+{
+  "name": "Fun Learning World",
+  "description": "عالم المرح والتعلّم | Interactive bilingual educational app for preschool and kindergarten children aged 4–6 with Lulu the mascot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
