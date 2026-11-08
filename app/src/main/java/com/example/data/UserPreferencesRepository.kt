@@ -9,12 +9,15 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
 import com.example.model.CategoryId
+import com.example.model.ColorsActivityId
 import com.example.model.LettersActivityId
 import com.example.model.LettersCurriculum
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
+import com.example.model.ShapesActivityId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -28,7 +31,10 @@ data class UserSettingsState(
     val completedNumbersActivities: Set<NumbersActivityId> = emptySet(),
     val completedLettersActivities: Set<LettersActivityId> = emptySet(),
     val learnedArabicLetters: Set<String> = emptySet(),
-    val learnedEnglishLetters: Set<String> = emptySet()
+    val learnedEnglishLetters: Set<String> = emptySet(),
+    val completedColorsActivities: Set<ColorsActivityId> = emptySet(),
+    val completedShapesActivities: Set<ShapesActivityId> = emptySet(),
+    val completedAnimalsActivities: Set<AnimalsActivityId> = emptySet()
 ) {
     val numbersActivityStars: Int
         get() = completedNumbersActivities.size
@@ -48,6 +54,15 @@ data class UserSettingsState(
     val lettersWorldProgressFraction: Float
         get() = (lettersActivityStars.toFloat() / totalLettersActivities.coerceAtLeast(1)).coerceIn(0f, 1f)
 
+    val colorsWorldProgressFraction: Float
+        get() = (completedColorsActivities.size.toFloat() / ColorsActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
+
+    val shapesWorldProgressFraction: Float
+        get() = (completedShapesActivities.size.toFloat() / ShapesActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
+
+    val animalsWorldProgressFraction: Float
+        get() = (completedAnimalsActivities.size.toFloat() / AnimalsActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
+
     val arabicLettersLearnedCount: Int
         get() = learnedArabicLetters.size
 
@@ -55,10 +70,20 @@ data class UserSettingsState(
         get() = learnedEnglishLetters.size
 
     val totalEarnedStars: Int
-        get() = categoryStars.values.sum() + completedNumbersActivities.size + completedLettersActivities.size
+        get() = categoryStars.values.sum() +
+            completedNumbersActivities.size +
+            completedLettersActivities.size +
+            completedColorsActivities.size +
+            completedShapesActivities.size +
+            completedAnimalsActivities.size
 
     val maxPossibleStars: Int
-        get() = CategoryId.entries.size * 3 + NumbersActivityId.entries.size + LettersActivityId.entries.size
+        get() = CategoryId.entries.size * 3 +
+            NumbersActivityId.entries.size +
+            LettersActivityId.entries.size +
+            ColorsActivityId.entries.size +
+            ShapesActivityId.entries.size +
+            AnimalsActivityId.entries.size
 
     val progressFraction: Float
         get() = (totalEarnedStars.toFloat() / maxPossibleStars.coerceAtLeast(1)).coerceIn(0f, 1f)
@@ -86,6 +111,9 @@ class UserPreferencesRepository(private val context: Context) {
         val COMPLETED_LETTERS_ACTIVITIES = stringSetPreferencesKey("completed_letters_activities")
         val LEARNED_ARABIC_LETTERS = stringSetPreferencesKey("learned_arabic_letters")
         val LEARNED_ENGLISH_LETTERS = stringSetPreferencesKey("learned_english_letters")
+        val COMPLETED_COLORS_ACTIVITIES = stringSetPreferencesKey("completed_colors_activities")
+        val COMPLETED_SHAPES_ACTIVITIES = stringSetPreferencesKey("completed_shapes_activities")
+        val COMPLETED_ANIMALS_ACTIVITIES = stringSetPreferencesKey("completed_animals_activities")
 
         fun starKey(categoryId: CategoryId) = intPreferencesKey("stars_${categoryId.key}")
     }
@@ -103,6 +131,15 @@ class UserPreferencesRepository(private val context: Context) {
 
         val completedLetterKeys = prefs[Keys.COMPLETED_LETTERS_ACTIVITIES] ?: emptySet()
         val completedLettersActivities = LettersActivityId.entries.filter { it.key in completedLetterKeys }.toSet()
+
+        val completedColorKeys = prefs[Keys.COMPLETED_COLORS_ACTIVITIES] ?: emptySet()
+        val completedColorsActivities = ColorsActivityId.entries.filter { it.key in completedColorKeys }.toSet()
+
+        val completedShapeKeys = prefs[Keys.COMPLETED_SHAPES_ACTIVITIES] ?: emptySet()
+        val completedShapesActivities = ShapesActivityId.entries.filter { it.key in completedShapeKeys }.toSet()
+
+        val completedAnimalKeys = prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] ?: emptySet()
+        val completedAnimalsActivities = AnimalsActivityId.entries.filter { it.key in completedAnimalKeys }.toSet()
 
         val validArabicIds = LettersCurriculum.arabicLetters.map { it.id }.toSet()
         val validEnglishIds = LettersCurriculum.englishLetters.map { it.id }.toSet()
@@ -138,6 +175,33 @@ class UserPreferencesRepository(private val context: Context) {
                     maxOf(baseStars, derivedStars)
                 }
 
+                id == CategoryId.COLORS && completedColorsActivities.isNotEmpty() -> {
+                    val derivedStars = when {
+                        completedColorsActivities.size >= 3 -> 3
+                        completedColorsActivities.size >= 2 -> 2
+                        else -> 1
+                    }
+                    maxOf(baseStars, derivedStars)
+                }
+
+                id == CategoryId.SHAPES && completedShapesActivities.isNotEmpty() -> {
+                    val derivedStars = when {
+                        completedShapesActivities.size >= 3 -> 3
+                        completedShapesActivities.size >= 2 -> 2
+                        else -> 1
+                    }
+                    maxOf(baseStars, derivedStars)
+                }
+
+                id == CategoryId.ANIMALS && completedAnimalsActivities.isNotEmpty() -> {
+                    val derivedStars = when {
+                        completedAnimalsActivities.size >= 3 -> 3
+                        completedAnimalsActivities.size >= 2 -> 2
+                        else -> 1
+                    }
+                    maxOf(baseStars, derivedStars)
+                }
+
                 else -> baseStars
             }
         }
@@ -150,7 +214,10 @@ class UserPreferencesRepository(private val context: Context) {
             completedNumbersActivities = completedNumbersActivities,
             completedLettersActivities = completedLettersActivities,
             learnedArabicLetters = learnedArabic,
-            learnedEnglishLetters = learnedEnglish
+            learnedEnglishLetters = learnedEnglish,
+            completedColorsActivities = completedColorsActivities,
+            completedShapesActivities = completedShapesActivities,
+            completedAnimalsActivities = completedAnimalsActivities
         )
     }
 
@@ -172,9 +239,6 @@ class UserPreferencesRepository(private val context: Context) {
         }
     }
 
-    /**
-     * Marks a Numbers World activity as completed and awards its star ONLY once.
-     */
     suspend fun markNumbersActivityCompleted(activityId: NumbersActivityId): Boolean {
         var newlyAwarded = false
         context.dataStore.edit { prefs ->
@@ -200,10 +264,6 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyAwarded
     }
 
-    /**
-     * Marks a Letters World activity as completed and awards its star ONLY once
-     * (prevents duplicate rewards for repeated attempts).
-     */
     suspend fun markLettersActivityCompleted(activityId: LettersActivityId): Boolean {
         var newlyAwarded = false
         context.dataStore.edit { prefs ->
@@ -231,10 +291,6 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyAwarded
     }
 
-    /**
-     * Records a letter as learned in either the Arabic Letters (28) or English Letters (26) section.
-     * Prevents duplicate entries when the child revisits the same letter.
-     */
     suspend fun markLetterLearned(letterId: String, section: LettersSectionMode): Boolean {
         var newlyLearned = false
         context.dataStore.edit { prefs ->
@@ -269,6 +325,87 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyLearned
     }
 
+    /**
+     * Marks a Colors World activity as completed and awards its star ONLY once.
+     */
+    suspend fun markColorsActivityCompleted(activityId: ColorsActivityId): Boolean {
+        var newlyAwarded = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val currentSet = prefs[Keys.COMPLETED_COLORS_ACTIVITIES] ?: emptySet()
+            if (activityId.key !in currentSet) {
+                val updated = currentSet + activityId.key
+                prefs[Keys.COMPLETED_COLORS_ACTIVITIES] = updated
+                newlyAwarded = true
+
+                val starLevel = when {
+                    updated.size >= 3 -> 3
+                    updated.size >= 2 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.COLORS)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.COLORS)] = starLevel
+                }
+            }
+        }
+        return newlyAwarded
+    }
+
+    /**
+     * Marks a Shapes World activity as completed and awards its star ONLY once.
+     */
+    suspend fun markShapesActivityCompleted(activityId: ShapesActivityId): Boolean {
+        var newlyAwarded = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val currentSet = prefs[Keys.COMPLETED_SHAPES_ACTIVITIES] ?: emptySet()
+            if (activityId.key !in currentSet) {
+                val updated = currentSet + activityId.key
+                prefs[Keys.COMPLETED_SHAPES_ACTIVITIES] = updated
+                newlyAwarded = true
+
+                val starLevel = when {
+                    updated.size >= 3 -> 3
+                    updated.size >= 2 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.SHAPES)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.SHAPES)] = starLevel
+                }
+            }
+        }
+        return newlyAwarded
+    }
+
+    /**
+     * Marks an Animals World activity as completed and awards its star ONLY once.
+     */
+    suspend fun markAnimalsActivityCompleted(activityId: AnimalsActivityId): Boolean {
+        var newlyAwarded = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val currentSet = prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] ?: emptySet()
+            if (activityId.key !in currentSet) {
+                val updated = currentSet + activityId.key
+                prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] = updated
+                newlyAwarded = true
+
+                val starLevel = when {
+                    updated.size >= 3 -> 3
+                    updated.size >= 2 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.ANIMALS)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.ANIMALS)] = starLevel
+                }
+            }
+        }
+        return newlyAwarded
+    }
+
     suspend fun incrementCategoryStar(categoryId: CategoryId) {
         context.dataStore.edit { prefs ->
             ensureInitialized(prefs)
@@ -285,6 +422,9 @@ class UserPreferencesRepository(private val context: Context) {
             prefs[Keys.COMPLETED_LETTERS_ACTIVITIES] = emptySet()
             prefs[Keys.LEARNED_ARABIC_LETTERS] = emptySet()
             prefs[Keys.LEARNED_ENGLISH_LETTERS] = emptySet()
+            prefs[Keys.COMPLETED_COLORS_ACTIVITIES] = emptySet()
+            prefs[Keys.COMPLETED_SHAPES_ACTIVITIES] = emptySet()
+            prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] = emptySet()
             CategoryId.entries.forEach { id ->
                 prefs[Keys.starKey(id)] = 0
             }

@@ -25,8 +25,11 @@ import com.example.ui.screens.CategoryPlaceholderScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LearningJourneyModal
 import com.example.ui.screens.ParentSectionDialog
+import com.example.ui.screens.animals.AnimalsWorldScreen
+import com.example.ui.screens.colors.ColorsWorldScreen
 import com.example.ui.screens.letters.LettersWorldScreen
 import com.example.ui.screens.numbers.NumbersWorldScreen
+import com.example.ui.screens.shapes.ShapesWorldScreen
 import com.example.ui.theme.FunLearningWorldTheme
 
 class MainActivity : ComponentActivity() {
@@ -103,6 +106,39 @@ fun FunLearningWorldApp(
                                 onSpeakLulu = viewModel::speakLulu,
                                 onCompleteActivity = viewModel::completeLettersActivity,
                                 onMarkLetterLearned = viewModel::markLetterLearned
+                            )
+                        }
+
+                        CategoryId.COLORS -> {
+                            ColorsWorldScreen(
+                                uiState = uiState,
+                                onNavigateHome = viewModel::navigateHome,
+                                onSelectLanguage = viewModel::selectLanguage,
+                                onToggleSound = viewModel::toggleSound,
+                                onSpeakLulu = viewModel::speakLulu,
+                                onCompleteActivity = viewModel::completeColorsActivity
+                            )
+                        }
+
+                        CategoryId.SHAPES -> {
+                            ShapesWorldScreen(
+                                uiState = uiState,
+                                onNavigateHome = viewModel::navigateHome,
+                                onSelectLanguage = viewModel::selectLanguage,
+                                onToggleSound = viewModel::toggleSound,
+                                onSpeakLulu = viewModel::speakLulu,
+                                onCompleteActivity = viewModel::completeShapesActivity
+                            )
+                        }
+
+                        CategoryId.ANIMALS -> {
+                            AnimalsWorldScreen(
+                                uiState = uiState,
+                                onNavigateHome = viewModel::navigateHome,
+                                onSelectLanguage = viewModel::selectLanguage,
+                                onToggleSound = viewModel::toggleSound,
+                                onSpeakLulu = viewModel::speakLulu,
+                                onCompleteActivity = viewModel::completeAnimalsActivity
                             )
                         }
 

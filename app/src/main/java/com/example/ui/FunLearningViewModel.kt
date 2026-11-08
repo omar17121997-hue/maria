@@ -5,13 +5,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.UserPreferencesRepository
 import com.example.data.UserSettingsState
+import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
 import com.example.model.CategoryId
+import com.example.model.ColorsActivityId
 import com.example.model.LearningCategoriesCatalog
 import com.example.model.LearningCategory
 import com.example.model.LettersActivityId
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
+import com.example.model.ShapesActivityId
 import com.example.util.LuluVoiceHelper
 import com.example.util.SoundEffectsHelper
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -187,6 +190,27 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
             if (newlyAdded) {
                 SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
             }
+        }
+    }
+
+    fun completeColorsActivity(activityId: ColorsActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markColorsActivityCompleted(activityId)
+        }
+    }
+
+    fun completeShapesActivity(activityId: ShapesActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markShapesActivityCompleted(activityId)
+        }
+    }
+
+    fun completeAnimalsActivity(activityId: AnimalsActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markAnimalsActivityCompleted(activityId)
         }
     }
 

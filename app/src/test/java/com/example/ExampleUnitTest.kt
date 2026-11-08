@@ -1,6 +1,11 @@
 package com.example
 
+import com.example.model.AnimalHabitat
+import com.example.model.AnimalsActivityId
+import com.example.model.AnimalsCurriculum
 import com.example.model.AppLanguage
+import com.example.model.ColorsActivityId
+import com.example.model.ColorsCurriculum
 import com.example.model.LearningCategoriesCatalog
 import com.example.model.LettersActivityId
 import com.example.model.LettersCurriculum
@@ -9,6 +14,9 @@ import com.example.model.LettersSectionMode
 import com.example.model.NumberQuizBank
 import com.example.model.NumbersActivityId
 import com.example.model.NumbersCurriculum
+import com.example.model.ShapeType
+import com.example.model.ShapesActivityId
+import com.example.model.ShapesCurriculum
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -93,5 +101,38 @@ class ExampleUnitTest {
             assertEquals(3, q.options.size)
             assertTrue(q.correctOption in q.options)
         }
+    }
+
+    @Test
+    fun verifyStage4ColorsShapesAndAnimalsWorlds() {
+        // World 1: Colors (10 colors, 4 activities)
+        val colors = ColorsCurriculum.allColors
+        assertEquals(10, colors.size)
+        assertEquals("أحمر", colors.first().nameAr)
+        assertEquals("Red", colors.first().nameEn)
+        assertEquals("بني", colors.last().nameAr)
+        assertEquals("Brown", colors.last().nameEn)
+        assertEquals(4, ColorsActivityId.entries.size)
+
+        // World 2: Shapes (8 shapes, 6 everyday objects, 4 activities)
+        val shapes = ShapesCurriculum.allShapes
+        assertEquals(8, shapes.size)
+        assertEquals("دائرة", shapes.first().nameAr)
+        assertEquals("Circle", shapes.first().nameEn)
+        assertEquals("معين", shapes.last().nameAr)
+        assertEquals("Diamond", shapes.last().nameEn)
+        assertEquals(6, ShapesCurriculum.everydayQuestions.size)
+        assertEquals(ShapeType.CIRCLE, ShapesCurriculum.everydayQuestions.first().targetShape)
+        assertEquals(4, ShapesActivityId.entries.size)
+
+        // World 3: Animals (15 animals, 4 habitats, 4 activities)
+        val animals = AnimalsCurriculum.allAnimals
+        assertEquals(15, animals.size)
+        assertEquals("أسد", animals.first().nameAr)
+        assertEquals("Lion", animals.first().nameEn)
+        assertEquals("فراشة", animals.last().nameAr)
+        assertEquals("Butterfly", animals.last().nameEn)
+        assertEquals(4, AnimalHabitat.entries.size)
+        assertEquals(4, AnimalsActivityId.entries.size)
     }
 }
