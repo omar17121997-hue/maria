@@ -2,6 +2,10 @@ package com.example
 
 import com.example.model.AppLanguage
 import com.example.model.LearningCategoriesCatalog
+import com.example.model.LettersActivityId
+import com.example.model.LettersCurriculum
+import com.example.model.LettersQuizBank
+import com.example.model.LettersSectionMode
 import com.example.model.NumberQuizBank
 import com.example.model.NumbersActivityId
 import com.example.model.NumbersCurriculum
@@ -28,7 +32,6 @@ class ExampleUnitTest {
 
     @Test
     fun verifyNumbersWorldCurriculumAndActivities() {
-        // Verify 10 numbers (1..10) with mathematically accurate values and bilingual numerals
         val lessons = NumbersCurriculum.lessons
         assertEquals(10, lessons.size)
         assertEquals(1, lessons.first().value)
@@ -47,13 +50,48 @@ class ExampleUnitTest {
         assertEquals("عشرة", numberTen.wordAr)
         assertEquals("Ten", numberTen.wordEn)
 
-        // Verify all 6 Numbers World activities exist
         assertEquals(6, NumbersActivityId.entries.size)
 
-        // Verify Quiz Bank has 3 options per question and valid correct answers
         NumberQuizBank.questions.forEach { q ->
             assertEquals(3, q.options.size)
             assertTrue(q.correctValue in q.options)
+        }
+    }
+
+    @Test
+    fun verifyArabicAndEnglishLettersWorldCurriculumAndActivities() {
+        // Verify all 28 Arabic letters (أ to ي)
+        val arabicLetters = LettersCurriculum.arabicLetters
+        assertEquals(28, arabicLetters.size)
+        assertEquals("أ", arabicLetters.first().isolatedSymbol)
+        assertEquals("أسد", arabicLetters.first().wordAr)
+        assertEquals("ب", arabicLetters[1].isolatedSymbol)
+        assertEquals("بطة", arabicLetters[1].wordAr)
+        assertEquals("_طة", arabicLetters[1].missingWordDisplay)
+        assertEquals("ي", arabicLetters.last().isolatedSymbol)
+        assertEquals("يد", arabicLetters.last().wordAr)
+
+        // Verify all 26 English letters (A a to Z z)
+        val englishLetters = LettersCurriculum.englishLetters
+        assertEquals(26, englishLetters.size)
+        assertEquals("A", englishLetters.first().uppercaseSymbol)
+        assertEquals("a", englishLetters.first().lowercaseSymbol)
+        assertEquals("Apple", englishLetters.first().wordEn)
+        assertEquals("Z", englishLetters.last().uppercaseSymbol)
+        assertEquals("z", englishLetters.last().lowercaseSymbol)
+        assertEquals("Zebra", englishLetters.last().wordEn)
+
+        // Verify all 6 Letters World activities exist
+        assertEquals(6, LettersActivityId.entries.size)
+
+        // Verify Arabic and English Quiz banks have 3 choices and valid answers
+        LettersQuizBank.questionsFor(LettersSectionMode.ARABIC).forEach { q ->
+            assertEquals(3, q.options.size)
+            assertTrue(q.correctOption in q.options)
+        }
+        LettersQuizBank.questionsFor(LettersSectionMode.ENGLISH).forEach { q ->
+            assertEquals(3, q.options.size)
+            assertTrue(q.correctOption in q.options)
         }
     }
 }

@@ -9,6 +9,8 @@ import com.example.model.AppLanguage
 import com.example.model.CategoryId
 import com.example.model.LearningCategoriesCatalog
 import com.example.model.LearningCategory
+import com.example.model.LettersActivityId
+import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
 import com.example.util.LuluVoiceHelper
 import com.example.util.SoundEffectsHelper
@@ -169,6 +171,22 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markNumbersActivityCompleted(activityId)
+        }
+    }
+
+    fun completeLettersActivity(activityId: LettersActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markLettersActivityCompleted(activityId)
+        }
+    }
+
+    fun markLetterLearned(letterId: String, section: LettersSectionMode) {
+        viewModelScope.launch {
+            val newlyAdded = repository.markLetterLearned(letterId, section)
+            if (newlyAdded) {
+                SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+            }
         }
     }
 

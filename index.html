@@ -851,15 +851,299 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (id === 'numbers') {
         speakLulu(state.lang === 'ar' ? 'مرحباً يا بطلتي! هيا نتعلم الأرقام معاً.' : "Welcome! Let's learn numbers together!", state.lang);
+      } else if (id === 'arabic_letters' || id === 'english_letters') {
+        state.lettersSection = id === 'arabic_letters' ? 'ar' : 'en';
+        state.lettersRoute = 'hub';
+        state.letterIdx = 0;
+        speakLulu(
+          state.lettersSection === 'ar'
+            ? 'مرحباً يا بطلتي! هيا نتعرف على الحروف العربية من الألف إلى الياء!'
+            : "Welcome! Let's learn English letters from A to Z!",
+          state.lettersSection
+        );
       }
       render();
     }
+
+    const arabicLettersList = [
+      { s: 'أ', n: 'ألف', w: 'أسد', m: '_سد', e: '🦁', d: 'فوقه همزة (ء)', col: '#E53935' },
+      { s: 'ب', n: 'باء', w: 'بطة', m: '_طة', e: '🦆', d: 'نقطة واحدة تحت الحرف (•)', col: '#00ACC1' },
+      { s: 'ت', n: 'تاء', w: 'تفاحة', m: '_فاحة', e: '🍎', d: 'نقطتان فوق الحرف (••)', col: '#43A047' },
+      { s: 'ث', n: 'ثاء', w: 'ثعلب', m: '_علب', e: '🦊', d: 'ثلاث نقاط فوق الحرف (•••)', col: '#FB8C00' },
+      { s: 'ج', n: 'جيم', w: 'جمل', m: '_مل', e: '🐪', d: 'نقطة في بطن الحرف (•)', col: '#8E24AA' },
+      { s: 'ح', n: 'حاء', w: 'حصان', m: '_صان', e: '🐴', d: 'بدون نقاط', col: '#D81B60' },
+      { s: 'خ', n: 'خاء', w: 'خروف', m: '_روف', e: '🐑', d: 'نقطة فوق رأسه (•)', col: '#3949AB' },
+      { s: 'د', n: 'دال', w: 'دب', m: '_ب', e: '🐻', d: 'بدون نقاط', col: '#00897B' },
+      { s: 'ذ', n: 'ذال', w: 'ذرة', m: '_رة', e: '🌽', d: 'نقطة واحدة فوقه (•)', col: '#E53935' },
+      { s: 'ر', n: 'راء', w: 'رمان', m: '_مان', e: '🍎', d: 'بدون نقاط', col: '#00ACC1' },
+      { s: 'ز', n: 'زاي', w: 'زرافة', m: '_رافة', e: '🦒', d: 'نقطة واحدة فوقه (•)', col: '#43A047' },
+      { s: 'س', n: 'سين', w: 'سمكة', m: '_مكة', e: '🐟', d: 'بدون نقاط', col: '#FB8C00' },
+      { s: 'ش', n: 'شين', w: 'شمس', m: '_مس', e: '☀️', d: 'ثلاث نقاط فوقه (•••)', col: '#8E24AA' },
+      { s: 'ص', n: 'صاد', w: 'صاروخ', m: '_اروخ', e: '🚀', d: 'بدون نقاط', col: '#D81B60' },
+      { s: 'ض', n: 'ضاد', w: 'ضفدع', m: '_فدع', e: '🐸', d: 'نقطة واحدة فوقه (•)', col: '#3949AB' },
+      { s: 'ط', n: 'طاء', w: 'طائرة', m: '_ائرة', e: '✈️', d: 'بدون نقاط', col: '#00897B' },
+      { s: 'ظ', n: 'ظاء', w: 'ظبي', m: '_بي', e: '🦌', d: 'نقطة واحدة فوقه (•)', col: '#E53935' },
+      { s: 'ع', n: 'عين', w: 'عصفور', m: '_صفور', e: '🐦', d: 'بدون نقاط', col: '#00ACC1' },
+      { s: 'غ', n: 'غين', w: 'غيمة', m: '_يمة', e: '☁️', d: 'نقطة واحدة فوقه (•)', col: '#43A047' },
+      { s: 'ف', n: 'فاء', w: 'فراشة', m: '_راشة', e: '🦋', d: 'نقطة واحدة فوقه (•)', col: '#FB8C00' },
+      { s: 'ق', n: 'قاف', w: 'قمر', m: '_مر', e: '🌙', d: 'نقطتان فوقه (••)', col: '#8E24AA' },
+      { s: 'ك', n: 'كاف', w: 'كتاب', m: '_تاب', e: '📚', d: 'شارة الكاف بداخله', col: '#D81B60' },
+      { s: 'ل', n: 'لام', w: 'ليمون', m: '_يمون', e: '🍋', d: 'بدون نقاط', col: '#3949AB' },
+      { s: 'م', n: 'ميم', w: 'موز', m: '_وز', e: '🍌', d: 'بدون نقاط', col: '#00897B' },
+      { s: 'ن', n: 'نون', w: 'نحلة', m: '_حلة', e: '🐝', d: 'نقطة في وسط الكأس (•)', col: '#E53935' },
+      { s: 'هـ', n: 'هاء', w: 'هدية', m: '_دية', e: '🎁', d: 'بدون نقاط', col: '#00ACC1' },
+      { s: 'و', n: 'واو', w: 'وردة', m: '_ردة', e: '🌹', d: 'بدون نقاط', col: '#43A047' },
+      { s: 'ي', n: 'ياء', w: 'يد', m: '_د', e: '✋', d: 'نقطتان تحت الحرف (••)', col: '#FB8C00' }
+    ];
+
+    const englishLettersList = [
+      { s: 'A a', u: 'A', l: 'a', n: 'A', w: 'Apple', m: '_pple', e: '🍎', d: 'Capital A & small a', col: '#E53935' },
+      { s: 'B b', u: 'B', l: 'b', n: 'B', w: 'Ball', m: '_all', e: '⚽', d: 'Capital B & small b', col: '#00ACC1' },
+      { s: 'C c', u: 'C', l: 'c', n: 'C', w: 'Cat', m: '_at', e: '🐱', d: 'Capital C & small c', col: '#43A047' },
+      { s: 'D d', u: 'D', l: 'd', n: 'D', w: 'Dog', m: '_og', e: '🐶', d: 'Capital D & small d', col: '#FB8C00' },
+      { s: 'E e', u: 'E', l: 'e', n: 'E', w: 'Elephant', m: '_lephant', e: '🐘', d: 'Capital E & small e', col: '#8E24AA' },
+      { s: 'F f', u: 'F', l: 'f', n: 'F', w: 'Fish', m: '_ish', e: '🐟', d: 'Capital F & small f', col: '#D81B60' },
+      { s: 'G g', u: 'G', l: 'g', n: 'G', w: 'Giraffe', m: '_iraffe', e: '🦒', d: 'Capital G & small g', col: '#3949AB' },
+      { s: 'H h', u: 'H', l: 'h', n: 'H', w: 'Horse', m: '_orse', e: '🐴', d: 'Capital H & small h', col: '#00897B' },
+      { s: 'I i', u: 'I', l: 'i', n: 'I', w: 'Ice Cream', m: '_ce Cream', e: '🍦', d: 'Capital I & small i', col: '#E53935' },
+      { s: 'J j', u: 'J', l: 'j', n: 'J', w: 'Juice', m: '_uice', e: '🧃', d: 'Capital J & small j', col: '#00ACC1' },
+      { s: 'K k', u: 'K', l: 'k', n: 'K', w: 'Kite', m: '_ite', e: '🪁', d: 'Capital K & small k', col: '#43A047' },
+      { s: 'L l', u: 'L', l: 'l', n: 'L', w: 'Lion', m: '_ion', e: '🦁', d: 'Capital L & small l', col: '#FB8C00' },
+      { s: 'M m', u: 'M', l: 'm', n: 'M', w: 'Monkey', m: '_onkey', e: '🐵', d: 'Capital M & small m', col: '#8E24AA' },
+      { s: 'N n', u: 'N', l: 'n', n: 'N', w: 'Nest', m: '_est', e: '🪺', d: 'Capital N & small n', col: '#D81B60' },
+      { s: 'O o', u: 'O', l: 'o', n: 'O', w: 'Orange', m: '_range', e: '🍊', d: 'Capital O & small o', col: '#3949AB' },
+      { s: 'P p', u: 'P', l: 'p', n: 'P', w: 'Penguin', m: '_enguin', e: '🐧', d: 'Capital P & small p', col: '#00897B' },
+      { s: 'Q q', u: 'Q', l: 'q', n: 'Q', w: 'Queen', m: '_ueen', e: '👑', d: 'Capital Q & small q', col: '#E53935' },
+      { s: 'R r', u: 'R', l: 'r', n: 'R', w: 'Rabbit', m: '_abbit', e: '🐰', d: 'Capital R & small r', col: '#00ACC1' },
+      { s: 'S s', u: 'S', l: 's', n: 'S', w: 'Sun', m: '_un', e: '☀️', d: 'Capital S & small s', col: '#43A047' },
+      { s: 'T t', u: 'T', l: 't', n: 'T', w: 'Train', m: '_rain', e: '🚂', d: 'Capital T & small t', col: '#FB8C00' },
+      { s: 'U u', u: 'U', l: 'u', n: 'U', w: 'Umbrella', m: '_mbrella', e: '☂️', d: 'Capital U & small u', col: '#8E24AA' },
+      { s: 'V v', u: 'V', l: 'v', n: 'V', w: 'Violin', m: '_iolin', e: '🎻', d: 'Capital V & small v', col: '#D81B60' },
+      { s: 'W w', u: 'W', l: 'w', n: 'W', w: 'Whale', m: '_hale', e: '🐋', d: 'Capital W & small w', col: '#3949AB' },
+      { s: 'X x', u: 'X', l: 'x', n: 'X', w: 'Xylophone', m: '_ylophone', e: '🎹', d: 'Capital X & small x', col: '#00897B' },
+      { s: 'Y y', u: 'Y', l: 'y', n: 'Y', w: 'Yacht', m: '_acht', e: '⛵', d: 'Capital Y & small y', col: '#E53935' },
+      { s: 'Z z', u: 'Z', l: 'z', n: 'Z', w: 'Zebra', m: '_ebra', e: '🦓', d: 'Capital Z & small z', col: '#00ACC1' }
+    ];
+
+    state.lettersSection = 'ar';
+    state.lettersRoute = 'hub';
+    state.letterIdx = 0;
 
     function navigateHome() {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       state.activeCategory = null;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
+    }
+
+    function openLettersActivity(route, idx = 0) {
+      state.lettersRoute = route;
+      state.letterIdx = idx;
+      const list = state.lettersSection === 'ar' ? arabicLettersList : englishLettersList;
+      const item = list[idx] || list[0];
+      if (route === 'meet') {
+        const msg = state.lettersSection === 'ar'
+          ? `هيا نتعرف على حرف ال${item.n}! ${item.w} يبدأ بحرف ال${item.n}.`
+          : `This is letter ${item.u}. ${item.u} is for ${item.w}!`;
+        speakLulu(msg, state.lettersSection);
+      } else if (route === 'tracing') {
+        const msg = state.lettersSection === 'ar'
+          ? `هيا نكتب حرف ال${item.n} معاً!`
+          : `Let's write letter ${item.u} together!`;
+        speakLulu(msg, state.lettersSection);
+      } else if (route === 'find') {
+        speakLulu(state.lettersSection === 'ar' ? `أين حرف ال${item.n}؟` : `Where is letter ${item.u}?`, state.lettersSection);
+      } else if (route === 'match_pic') {
+        speakLulu(state.lettersSection === 'ar' ? `أي صورة تبدأ بحرف ال${item.n}؟` : `Which picture starts with letter ${item.u}?`, state.lettersSection);
+      } else if (route === 'missing') {
+        speakLulu(state.lettersSection === 'ar' ? `أكملي الحرف الناقص في كلمة ${item.w}!` : `Pick the missing first letter in ${item.w}!`, state.lettersSection);
+      } else if (route === 'quiz') {
+        speakLulu(state.lettersSection === 'ar' ? 'بأي حرف تبدأ كلمة أسد؟' : 'Which letter does Apple start with?', state.lettersSection);
+      }
+      render();
+      if (route === 'tracing') setTimeout(initLetterTracingCanvas, 50);
+    }
+
+    function initLetterTracingCanvas() {
+      const canvas = document.getElementById('trace-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      const list = state.lettersSection === 'ar' ? arabicLettersList : englishLettersList;
+      const item = list[state.letterIdx] || list[0];
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `bold ${Math.floor(canvas.height * 0.62)}px Cairo, Fredoka, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = item.col + '22';
+      ctx.fillText(item.s, canvas.width / 2, canvas.height * 0.54);
+      ctx.setLineDash([12, 10]);
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = item.col;
+      ctx.strokeText(item.s, canvas.width / 2, canvas.height * 0.54);
+      ctx.setLineDash([]);
+
+      let drawing = false;
+      let pts = 0;
+      function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches ? e.touches[0] : e;
+        return { x: t.clientX - r.left, y: t.clientY - r.top };
+      }
+      canvas.onpointerdown = (e) => {
+        drawing = true;
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+      };
+      canvas.onpointermove = (e) => {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 22;
+        ctx.strokeStyle = item.col;
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        pts++;
+        if (pts === 25) {
+          speakLulu(state.lettersSection === 'ar' ? 'ممتاز يا بطلة! كتبتِ الحرف بشكل رائع!' : 'Great job! You wrote the letter!', state.lettersSection);
+        }
+      };
+      canvas.onpointerup = () => { drawing = false; };
+    }
+
+    function renderLettersWorld(isAr) {
+      const isArSec = state.lettersSection === 'ar';
+      const list = isArSec ? arabicLettersList : englishLettersList;
+      const item = list[state.letterIdx % list.length];
+
+      if (state.lettersRoute === 'hub') {
+        const gridHtml = list.map((l, idx) => `
+          <div class="num-tile" style="width:88px; height:84px; flex-direction:column; background:${l.col}; font-size:1.35rem;" onclick="openLettersActivity('meet', ${idx})">
+            <div>${l.s}</div>
+            <div style="font-size:0.8rem;">${l.e} ${l.w}</div>
+          </div>
+        `).join('');
+
+        const acts = [
+          { key: 'meet', emoji: '🔤', ar: 'تعرّف على الحرف', en: 'Meet the Letter', col: '#00838F' },
+          { key: 'tracing', emoji: '✏️', ar: 'كتابة وتتبع الحرف', en: 'Letter Tracing', col: '#AD1457' },
+          { key: 'find', emoji: '🔍', ar: 'أين هو الحرف؟', en: 'Find the Letter', col: '#2E7D32' },
+          { key: 'match_pic', emoji: '🖼️', ar: 'طابق الحرف بالصورة', en: 'Match Letter to Picture', col: '#6A1B9A' },
+          { key: 'missing', emoji: '🧩', ar: 'أكمل الحرف الناقص', en: 'Complete Missing Letter', col: '#E65100' },
+          { key: 'quiz', emoji: '🌟', ar: 'مسابقة الحروف', en: 'Letter Quiz', col: '#1565C0' }
+        ];
+
+        const actsHtml = acts.map(a => `
+          <div class="category-card" style="background:#FFF; border-color:${a.col}; box-shadow:0 6px 0 ${a.col};" onclick="openLettersActivity('${a.key}', 0)">
+            <div class="card-header-row">
+              <span style="font-size:1.8rem;">${a.emoji}</span>
+              <span class="cat-stars-badge">⭐ نشاط</span>
+            </div>
+            <h3 class="card-title">${isAr ? a.ar : a.en}</h3>
+            <button class="btn-3d card-action-btn" style="background:${a.col};">▶ ${isAr ? 'ابدأ النشاط' : 'Play Now'}</button>
+          </div>
+        `).join('');
+
+        return `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button class="btn-3d" style="background:var(--lulu-pink); color:#FFF; padding:12px 22px; font-size:1.1rem;" onclick="navigateHome()">
+              🏠 ${isAr ? 'الرئيسية' : 'Home'}
+            </button>
+          </div>
+          <div class="world-panel" style="background:${isArSec ? '#E0F7FA' : '#FCE4EC'};">
+            <div class="card-illustration-box" style="height:185px;">
+              <img src="${isArSec ? './app/src/main/res/drawable/img_cat_arabic_letters_1794073876696.jpg' : './app/src/main/res/drawable/img_cat_english_letters_1794073878108.jpg'}" alt="Letters" />
+            </div>
+            <h2 style="font-size:1.8rem; font-weight:900; text-align:center;">
+              ${isArSec ? 'عالم الحروف العربية (٢٨ حرفاً)' : 'English Letters World (A to Z)'}
+            </h2>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-3d" style="flex:1; padding:12px; background:${isArSec ? '#00838F' : '#FFF'}; color:${isArSec ? '#FFF' : '#141829'};" onclick="state.lettersSection='ar'; render();">
+                الحروف العربية (أ – ي)
+              </button>
+              <button class="btn-3d" style="flex:1; padding:12px; background:${!isArSec ? '#D81B60' : '#FFF'}; color:${!isArSec ? '#FFF' : '#141829'};" onclick="state.lettersSection='en'; render();">
+                English Letters (A – Z)
+              </button>
+            </div>
+            <div class="num-strip">${gridHtml}</div>
+          </div>
+          <div class="categories-grid">${actsHtml}</div>
+        `;
+      }
+
+      if (state.lettersRoute === 'meet') {
+        const spoken = isArSec
+          ? `أحسنتِ! هذا حرف ال${item.n}. رائع! ${item.w} يبدأ بحرف ال${item.n}.`
+          : `Great job! This is letter ${item.u}. ${item.u} is for ${item.w}!`;
+        return `
+          <div style="display:flex; gap:10px;">
+            <button class="btn-3d" style="background:#00838F; color:#FFF; padding:10px 18px;" onclick="openLettersActivity('hub')">⬅ ${isAr ? 'عالم الحروف' : 'Letters Hub'}</button>
+            <button class="btn-3d" style="background:var(--lulu-pink); color:#FFF; padding:10px 18px;" onclick="navigateHome()">🏠 ${isAr ? 'الرئيسية' : 'Home'}</button>
+          </div>
+          <div class="world-panel" style="text-align:center; align-items:center;">
+            <div style="width:140px; height:140px; border-radius:30px; background:${item.col}; color:#FFF; font-size:4rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:4px solid var(--sunny-yellow);">
+              ${item.s}
+            </div>
+            <h2 style="font-size:2.2rem; font-weight:900;">${isArSec ? 'حرف ال' + item.n : 'Letter ' + item.s}</h2>
+            <p style="font-weight:800; color:var(--soft-slate);">${item.d}</p>
+            <div class="objects-showcase" style="flex-direction:column; gap:6px;">
+              <div style="font-size:4.2rem;">${item.e}</div>
+              <div style="font-size:2.2rem; font-weight:900;">${item.w}</div>
+            </div>
+            <div style="display:flex; gap:10px; width:100%;">
+              <button class="btn-3d" style="flex:1; background:var(--sunny-yellow); color:#141829; padding:12px;" onclick="speakLulu('${spoken}', '${state.lettersSection}')">🔊 ${isAr ? 'استمع للنطق' : 'Hear Letter & Word'}</button>
+              <button class="btn-3d" style="flex:1; background:${item.col}; color:#FFF; padding:12px;" onclick="openLettersActivity('tracing', ${state.letterIdx})">✏️ ${isAr ? 'تدرّب على كتابته' : 'Trace Letter'}</button>
+            </div>
+            <div style="display:flex; gap:12px; width:100%;">
+              <button class="btn-3d" style="flex:1; background:#CFD8DC; color:#141829; padding:12px;" onclick="openLettersActivity('meet', ${(state.letterIdx - 1 + list.length) % list.length})">${isAr ? 'السابق' : 'Previous'}</button>
+              <button class="btn-3d" style="flex:1; background:var(--meadow-green); color:#FFF; padding:12px;" onclick="openLettersActivity('meet', ${(state.letterIdx + 1) % list.length})">${isAr ? 'الحرف التالي ⭐' : 'Next Letter ⭐'}</button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (state.lettersRoute === 'tracing') {
+        return `
+          <div style="display:flex; gap:10px;">
+            <button class="btn-3d" style="background:#00838F; color:#FFF; padding:10px 18px;" onclick="openLettersActivity('hub')">⬅ ${isAr ? 'عالم الحروف' : 'Letters Hub'}</button>
+          </div>
+          <div class="world-panel" style="text-align:center;">
+            <h2>✏️ ${isAr ? `اكتبي الحرف (${item.s}) • ${item.e} ${item.w}` : `Trace Letter (${item.s}) • ${item.e} ${item.w}`}</h2>
+            <canvas id="trace-canvas"></canvas>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-3d" style="flex:1; background:var(--lulu-pink); color:#FFF; padding:12px;" onclick="initLetterTracingCanvas()">🗑️ ${isAr ? 'مسح وإعادة' : 'Clear & Retry'}</button>
+              <button class="btn-3d" style="flex:1; background:var(--meadow-green); color:#FFF; padding:12px;" onclick="openLettersActivity('tracing', ${(state.letterIdx + 1) % list.length})">${isAr ? 'الحرف التالي ⭐' : 'Next Letter ⭐'}</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Interactive Games for Find Letter, Match Picture, Missing Letter, and Quiz
+      const alt1 = list[(state.letterIdx + 3) % list.length];
+      const alt2 = list[(state.letterIdx + 7) % list.length];
+      const opts = [item, alt1, alt2];
+
+      return `
+        <div style="display:flex; gap:10px;">
+          <button class="btn-3d" style="background:#00838F; color:#FFF; padding:10px 18px;" onclick="openLettersActivity('hub')">⬅ ${isAr ? 'عالم الحروف' : 'Letters Hub'}</button>
+        </div>
+        <div class="world-panel" style="text-align:center;">
+          <h2>${state.lettersRoute === 'missing' ? `🧩 ${item.e}  ${item.m}` : `🌟 ${item.e}  ${item.w}`}</h2>
+          <p style="font-weight:800;">${isAr ? 'اختاري الإجابة الصحيحة!' : 'Choose the right answer!'}</p>
+          <div style="display:flex; gap:12px;">
+            ${opts.map(o => `
+              <button class="btn-3d" style="flex:1; background:${o.col}; color:#FFF; padding:18px; font-size:1.7rem;" onclick="if('${o.s}'==='${item.s}'){speakLulu('${isArSec ? 'ممتاز يا بطلة!' : 'Great job!'}','${state.lettersSection}');openLettersActivity('${state.lettersRoute}', ${(state.letterIdx + 1) % list.length});}else{speakLulu('${isArSec ? 'حاولي مرة أخرى!' : 'Try again!'}','${state.lettersSection}');}">
+                ${state.lettersRoute === 'match_pic' ? `${o.e} ${o.w}` : o.s}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
     }
 
     function openNumbersActivity(route, num = 1) {
@@ -894,8 +1178,8 @@
     function openParentModal() {
       const isAr = state.lang === 'ar';
       alert(isAr
-        ? `👨‍👩‍👧 ركن الأهل:\n• الأنشطة المكتملة في عالم الأرقام: ${state.completedActivities.length} من 6`
-        : `👨‍👩‍👧 Parents Corner:\n• Completed Numbers World activities: ${state.completedActivities.length} / 6`);
+        ? `👨‍👩‍👧 ركن الأهل:\n• الأنشطة المكتملة: ${state.completedActivities.length}`
+        : `👨‍👩‍👧 Parents Corner:\n• Completed activities: ${state.completedActivities.length}`);
     }
 
     function initTracingCanvas() {
@@ -1154,7 +1438,6 @@
         `;
       }
 
-      // Activity 6: Number Order
       const slotsHtml = lessons.map(l => {
         const placed = l.v < state.orderNext;
         return `<div class="num-tile" style="background:${placed ? l.col : '#ECEFF1'}; color:${placed ? '#FFF' : '#90A4AE'};">${placed ? (nAr ? l.ar : l.en) : '؟'}</div>`;
@@ -1248,6 +1531,8 @@
         catView.classList.remove('hidden');
         if (state.activeCategory === 'numbers') {
           catView.innerHTML = renderNumbersWorld(isAr);
+        } else if (state.activeCategory === 'arabic_letters' || state.activeCategory === 'english_letters') {
+          catView.innerHTML = renderLettersWorld(isAr);
         } else {
           const cat = categories.find(c => c.id === state.activeCategory) || categories[0];
           const title = isAr ? cat.titleAr : cat.titleEn;
@@ -1273,7 +1558,7 @@
       }
 
       const totalStars = Object.values(state.stars).reduce((a, b) => a + b, 0) + state.completedActivities.length;
-      const maxStars = 30;
+      const maxStars = 36;
       const pct = Math.min(100, Math.round((totalStars / maxStars) * 100));
       document.getElementById('journey-title').textContent = isAr ? 'رحلتي التعليمية' : 'My Learning Journey';
       document.getElementById('journey-sub').textContent = isAr
