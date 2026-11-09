@@ -4,6 +4,9 @@ import com.example.model.AnimalHabitat
 import com.example.model.AnimalsActivityId
 import com.example.model.AnimalsCurriculum
 import com.example.model.AppLanguage
+import com.example.model.BrainGameActivityId
+import com.example.model.BrainGamesCurriculum
+import com.example.model.ColoringTemplateTheme
 import com.example.model.ColorsActivityId
 import com.example.model.ColorsCurriculum
 import com.example.model.LearningCategoriesCatalog
@@ -17,6 +20,8 @@ import com.example.model.NumbersCurriculum
 import com.example.model.ShapeType
 import com.example.model.ShapesActivityId
 import com.example.model.ShapesCurriculum
+import com.example.model.WritingDrawingActivityId
+import com.example.model.WritingDrawingCurriculum
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -134,5 +139,27 @@ class ExampleUnitTest {
         assertEquals("Butterfly", animals.last().nameEn)
         assertEquals(4, AnimalHabitat.entries.size)
         assertEquals(4, AnimalsActivityId.entries.size)
+    }
+
+    @Test
+    fun verifyStage5BrainGamesAndStage6WritingDrawingWorlds() {
+        // Stage 5: Brain Games World (6 activities)
+        assertEquals(6, BrainGameActivityId.entries.size)
+        assertTrue(BrainGamesCurriculum.memoryPool.size >= 4)
+        assertEquals(5, BrainGamesCurriculum.oddOneOutQuestions.size)
+        assertEquals(5, BrainGamesCurriculum.patternQuestions.size)
+        assertEquals(4, BrainGamesCurriculum.sizeOrderChallenges.size)
+        assertEquals(listOf(4, 6, 9), BrainGamesCurriculum.picturePuzzles.map { it.pieceCount })
+        assertEquals(5, BrainGamesCurriculum.countAndThinkQuestions.size)
+
+        // Stage 6: Writing & Drawing World (6 activities)
+        assertEquals(6, WritingDrawingActivityId.entries.size)
+        assertEquals(6, ColoringTemplateTheme.entries.size)
+        assertEquals(5, WritingDrawingCurriculum.drawAndLearnChallenges.size)
+
+        val baaForms = WritingDrawingCurriculum.getArabicLetterForms("ب")
+        assertEquals("بـ", baaForms.initial)
+        assertEquals("ـبـ", baaForms.medial)
+        assertEquals("ـب", baaForms.finalForm)
     }
 }

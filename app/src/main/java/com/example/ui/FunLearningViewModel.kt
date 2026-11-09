@@ -7,6 +7,7 @@ import com.example.data.UserPreferencesRepository
 import com.example.data.UserSettingsState
 import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
+import com.example.model.BrainGameActivityId
 import com.example.model.CategoryId
 import com.example.model.ColorsActivityId
 import com.example.model.LearningCategoriesCatalog
@@ -15,6 +16,7 @@ import com.example.model.LettersActivityId
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
 import com.example.model.ShapesActivityId
+import com.example.model.WritingDrawingActivityId
 import com.example.util.LuluVoiceHelper
 import com.example.util.SoundEffectsHelper
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -211,6 +213,36 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markAnimalsActivityCompleted(activityId)
+        }
+    }
+
+    fun completeBrainActivity(activityId: BrainGameActivityId, levelReached: Int = 1) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markBrainActivityCompleted(activityId, levelReached)
+        }
+    }
+
+    fun completeWritingActivity(activityId: WritingDrawingActivityId) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.markWritingActivityCompleted(activityId)
+        }
+    }
+
+    fun markWritingItemPracticed(itemKey: String) {
+        viewModelScope.launch {
+            val newlyPracticed = repository.markWritingItemPracticed(itemKey)
+            if (newlyPracticed) {
+                SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+            }
+        }
+    }
+
+    fun saveChildDrawing(title: String) {
+        SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.saveChildDrawingEntry(title)
         }
     }
 

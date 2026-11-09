@@ -26,10 +26,12 @@ import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LearningJourneyModal
 import com.example.ui.screens.ParentSectionDialog
 import com.example.ui.screens.animals.AnimalsWorldScreen
+import com.example.ui.screens.brain.BrainGamesWorldScreen
 import com.example.ui.screens.colors.ColorsWorldScreen
 import com.example.ui.screens.letters.LettersWorldScreen
 import com.example.ui.screens.numbers.NumbersWorldScreen
 import com.example.ui.screens.shapes.ShapesWorldScreen
+import com.example.ui.screens.writing.WritingDrawingWorldScreen
 import com.example.ui.theme.FunLearningWorldTheme
 
 class MainActivity : ComponentActivity() {
@@ -142,18 +144,27 @@ fun FunLearningWorldApp(
                             )
                         }
 
-                        else -> {
-                            val category = uiState.getCategory(destination.categoryId)
-                            val earnedStars = uiState.settings.categoryStars[destination.categoryId] ?: 1
-                            CategoryPlaceholderScreen(
-                                category = category,
-                                language = uiState.settings.language,
-                                soundEnabled = uiState.settings.soundEnabled,
-                                earnedStars = earnedStars,
+                        CategoryId.BRAIN_GAMES -> {
+                            BrainGamesWorldScreen(
+                                uiState = uiState,
                                 onNavigateHome = viewModel::navigateHome,
                                 onSelectLanguage = viewModel::selectLanguage,
                                 onToggleSound = viewModel::toggleSound,
-                                onCollectStar = { viewModel.collectPreviewStar(destination.categoryId) }
+                                onSpeakLulu = viewModel::speakLulu,
+                                onCompleteActivity = viewModel::completeBrainActivity
+                            )
+                        }
+
+                        CategoryId.WRITING_DRAWING -> {
+                            WritingDrawingWorldScreen(
+                                uiState = uiState,
+                                onNavigateHome = viewModel::navigateHome,
+                                onSelectLanguage = viewModel::selectLanguage,
+                                onToggleSound = viewModel::toggleSound,
+                                onSpeakLulu = viewModel::speakLulu,
+                                onCompleteActivity = viewModel::completeWritingActivity,
+                                onMarkItemPracticed = viewModel::markWritingItemPracticed,
+                                onSaveDrawing = viewModel::saveChildDrawing
                             )
                         }
                     }

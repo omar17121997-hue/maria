@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
+import com.example.model.BrainGameActivityId
 import com.example.model.CategoryId
 import com.example.model.ColorsActivityId
 import com.example.model.LettersActivityId
@@ -18,6 +19,7 @@ import com.example.model.LettersCurriculum
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
 import com.example.model.ShapesActivityId
+import com.example.model.WritingDrawingActivityId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -34,7 +36,12 @@ data class UserSettingsState(
     val learnedEnglishLetters: Set<String> = emptySet(),
     val completedColorsActivities: Set<ColorsActivityId> = emptySet(),
     val completedShapesActivities: Set<ShapesActivityId> = emptySet(),
-    val completedAnimalsActivities: Set<AnimalsActivityId> = emptySet()
+    val completedAnimalsActivities: Set<AnimalsActivityId> = emptySet(),
+    val completedBrainActivities: Set<BrainGameActivityId> = emptySet(),
+    val brainMaxLevelReached: Int = 1,
+    val completedWritingActivities: Set<WritingDrawingActivityId> = emptySet(),
+    val practicedWritingItems: Set<String> = emptySet(),
+    val savedDrawingsTitles: Set<String> = emptySet()
 ) {
     val numbersActivityStars: Int
         get() = completedNumbersActivities.size
@@ -63,6 +70,12 @@ data class UserSettingsState(
     val animalsWorldProgressFraction: Float
         get() = (completedAnimalsActivities.size.toFloat() / AnimalsActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
 
+    val brainWorldProgressFraction: Float
+        get() = (completedBrainActivities.size.toFloat() / BrainGameActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
+
+    val writingWorldProgressFraction: Float
+        get() = (completedWritingActivities.size.toFloat() / WritingDrawingActivityId.entries.size.coerceAtLeast(1)).coerceIn(0f, 1f)
+
     val arabicLettersLearnedCount: Int
         get() = learnedArabicLetters.size
 
@@ -75,7 +88,9 @@ data class UserSettingsState(
             completedLettersActivities.size +
             completedColorsActivities.size +
             completedShapesActivities.size +
-            completedAnimalsActivities.size
+            completedAnimalsActivities.size +
+            completedBrainActivities.size +
+            completedWritingActivities.size
 
     val maxPossibleStars: Int
         get() = CategoryId.entries.size * 3 +
@@ -83,7 +98,9 @@ data class UserSettingsState(
             LettersActivityId.entries.size +
             ColorsActivityId.entries.size +
             ShapesActivityId.entries.size +
-            AnimalsActivityId.entries.size
+            AnimalsActivityId.entries.size +
+            BrainGameActivityId.entries.size +
+            WritingDrawingActivityId.entries.size
 
     val progressFraction: Float
         get() = (totalEarnedStars.toFloat() / maxPossibleStars.coerceAtLeast(1)).coerceIn(0f, 1f)
@@ -114,6 +131,11 @@ class UserPreferencesRepository(private val context: Context) {
         val COMPLETED_COLORS_ACTIVITIES = stringSetPreferencesKey("completed_colors_activities")
         val COMPLETED_SHAPES_ACTIVITIES = stringSetPreferencesKey("completed_shapes_activities")
         val COMPLETED_ANIMALS_ACTIVITIES = stringSetPreferencesKey("completed_animals_activities")
+        val COMPLETED_BRAIN_ACTIVITIES = stringSetPreferencesKey("completed_brain_activities")
+        val BRAIN_MAX_LEVEL = intPreferencesKey("brain_max_level")
+        val COMPLETED_WRITING_ACTIVITIES = stringSetPreferencesKey("completed_writing_activities")
+        val PRACTICED_WRITING_ITEMS = stringSetPreferencesKey("practiced_writing_items")
+        val SAVED_DRAWINGS_TITLES = stringSetPreferencesKey("saved_drawings_titles")
 
         fun starKey(categoryId: CategoryId) = intPreferencesKey("stars_${categoryId.key}")
     }
@@ -140,6 +162,15 @@ class UserPreferencesRepository(private val context: Context) {
 
         val completedAnimalKeys = prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] ?: emptySet()
         val completedAnimalsActivities = AnimalsActivityId.entries.filter { it.key in completedAnimalKeys }.toSet()
+
+        val completedBrainKeys = prefs[Keys.COMPLETED_BRAIN_ACTIVITIES] ?: emptySet()
+        val completedBrainActivities = BrainGameActivityId.entries.filter { it.key in completedBrainKeys }.toSet()
+        val brainMaxLevel = (prefs[Keys.BRAIN_MAX_LEVEL] ?: 1).coerceIn(1, 3)
+
+        val completedWritingKeys = prefs[Keys.COMPLETED_WRITING_ACTIVITIES] ?: emptySet()
+        val completedWritingActivities = WritingDrawingActivityId.entries.filter { it.key in completedWritingKeys }.toSet()
+        val practicedWritingItems = prefs[Keys.PRACTICED_WRITING_ITEMS] ?: emptySet()
+        val savedDrawingsTitles = prefs[Keys.SAVED_DRAWINGS_TITLES] ?: emptySet()
 
         val validArabicIds = LettersCurriculum.arabicLetters.map { it.id }.toSet()
         val validEnglishIds = LettersCurriculum.englishLetters.map { it.id }.toSet()
@@ -202,6 +233,25 @@ class UserPreferencesRepository(private val context: Context) {
                     maxOf(baseStars, derivedStars)
                 }
 
+                id == CategoryId.BRAIN_GAMES && completedBrainActivities.isNotEmpty() -> {
+                    val derivedStars = when {
+                        completedBrainActivities.size >= 5 -> 3
+                        completedBrainActivities.size >= 2 -> 2
+                        else -> 1
+                    }
+                    maxOf(baseStars, derivedStars)
+                }
+
+                id == CategoryId.WRITING_DRAWING &&
+                    (completedWritingActivities.isNotEmpty() || practicedWritingItems.isNotEmpty() || savedDrawingsTitles.isNotEmpty()) -> {
+                    val derivedStars = when {
+                        completedWritingActivities.size >= 5 || practicedWritingItems.size >= 12 -> 3
+                        completedWritingActivities.size >= 2 || practicedWritingItems.size >= 4 || savedDrawingsTitles.isNotEmpty() -> 2
+                        else -> 1
+                    }
+                    maxOf(baseStars, derivedStars)
+                }
+
                 else -> baseStars
             }
         }
@@ -217,7 +267,12 @@ class UserPreferencesRepository(private val context: Context) {
             learnedEnglishLetters = learnedEnglish,
             completedColorsActivities = completedColorsActivities,
             completedShapesActivities = completedShapesActivities,
-            completedAnimalsActivities = completedAnimalsActivities
+            completedAnimalsActivities = completedAnimalsActivities,
+            completedBrainActivities = completedBrainActivities,
+            brainMaxLevelReached = brainMaxLevel,
+            completedWritingActivities = completedWritingActivities,
+            practicedWritingItems = practicedWritingItems,
+            savedDrawingsTitles = savedDrawingsTitles
         )
     }
 
@@ -325,9 +380,6 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyLearned
     }
 
-    /**
-     * Marks a Colors World activity as completed and awards its star ONLY once.
-     */
     suspend fun markColorsActivityCompleted(activityId: ColorsActivityId): Boolean {
         var newlyAwarded = false
         context.dataStore.edit { prefs ->
@@ -352,9 +404,6 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyAwarded
     }
 
-    /**
-     * Marks a Shapes World activity as completed and awards its star ONLY once.
-     */
     suspend fun markShapesActivityCompleted(activityId: ShapesActivityId): Boolean {
         var newlyAwarded = false
         context.dataStore.edit { prefs ->
@@ -379,9 +428,6 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyAwarded
     }
 
-    /**
-     * Marks an Animals World activity as completed and awards its star ONLY once.
-     */
     suspend fun markAnimalsActivityCompleted(activityId: AnimalsActivityId): Boolean {
         var newlyAwarded = false
         context.dataStore.edit { prefs ->
@@ -406,6 +452,94 @@ class UserPreferencesRepository(private val context: Context) {
         return newlyAwarded
     }
 
+    suspend fun markBrainActivityCompleted(activityId: BrainGameActivityId, levelReached: Int = 1): Boolean {
+        var newlyAwarded = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val currentSet = prefs[Keys.COMPLETED_BRAIN_ACTIVITIES] ?: emptySet()
+            if (activityId.key !in currentSet) {
+                val updated = currentSet + activityId.key
+                prefs[Keys.COMPLETED_BRAIN_ACTIVITIES] = updated
+                newlyAwarded = true
+
+                val starLevel = when {
+                    updated.size >= 5 -> 3
+                    updated.size >= 2 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.BRAIN_GAMES)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.BRAIN_GAMES)] = starLevel
+                }
+            }
+            val currentLevel = prefs[Keys.BRAIN_MAX_LEVEL] ?: 1
+            if (levelReached > currentLevel) {
+                prefs[Keys.BRAIN_MAX_LEVEL] = levelReached.coerceIn(1, 3)
+            }
+        }
+        return newlyAwarded
+    }
+
+    suspend fun markWritingActivityCompleted(activityId: WritingDrawingActivityId): Boolean {
+        var newlyAwarded = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val currentSet = prefs[Keys.COMPLETED_WRITING_ACTIVITIES] ?: emptySet()
+            if (activityId.key !in currentSet) {
+                val updated = currentSet + activityId.key
+                prefs[Keys.COMPLETED_WRITING_ACTIVITIES] = updated
+                newlyAwarded = true
+
+                val starLevel = when {
+                    updated.size >= 5 -> 3
+                    updated.size >= 2 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] = starLevel
+                }
+            }
+        }
+        return newlyAwarded
+    }
+
+    suspend fun markWritingItemPracticed(itemKey: String): Boolean {
+        var newlyPracticed = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val current = prefs[Keys.PRACTICED_WRITING_ITEMS] ?: emptySet()
+            if (itemKey !in current) {
+                val updated = current + itemKey
+                prefs[Keys.PRACTICED_WRITING_ITEMS] = updated
+                newlyPracticed = true
+
+                val starLevel = when {
+                    updated.size >= 12 -> 3
+                    updated.size >= 4 -> 2
+                    else -> 1
+                }
+                val existing = prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] ?: 1
+                if (starLevel > existing) {
+                    prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] = starLevel
+                }
+            }
+        }
+        return newlyPracticed
+    }
+
+    suspend fun saveChildDrawingEntry(title: String) {
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val current = prefs[Keys.SAVED_DRAWINGS_TITLES] ?: emptySet()
+            prefs[Keys.SAVED_DRAWINGS_TITLES] = current + title
+            val existing = prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] ?: 1
+            if (existing < 2) {
+                prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] = 2
+            }
+        }
+    }
+
     suspend fun incrementCategoryStar(categoryId: CategoryId) {
         context.dataStore.edit { prefs ->
             ensureInitialized(prefs)
@@ -425,6 +559,11 @@ class UserPreferencesRepository(private val context: Context) {
             prefs[Keys.COMPLETED_COLORS_ACTIVITIES] = emptySet()
             prefs[Keys.COMPLETED_SHAPES_ACTIVITIES] = emptySet()
             prefs[Keys.COMPLETED_ANIMALS_ACTIVITIES] = emptySet()
+            prefs[Keys.COMPLETED_BRAIN_ACTIVITIES] = emptySet()
+            prefs[Keys.BRAIN_MAX_LEVEL] = 1
+            prefs[Keys.COMPLETED_WRITING_ACTIVITIES] = emptySet()
+            prefs[Keys.PRACTICED_WRITING_ITEMS] = emptySet()
+            prefs[Keys.SAVED_DRAWINGS_TITLES] = emptySet()
             CategoryId.entries.forEach { id ->
                 prefs[Keys.starKey(id)] = 0
             }
