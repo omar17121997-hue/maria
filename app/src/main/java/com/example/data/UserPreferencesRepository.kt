@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.model.ActivityLogEntry
 import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
 import com.example.model.BrainGameActivityId
@@ -19,6 +20,7 @@ import com.example.model.LettersCurriculum
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
 import com.example.model.ShapesActivityId
+import com.example.model.SurpriseRewardItem
 import com.example.model.WritingDrawingActivityId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,6 +31,8 @@ data class UserSettingsState(
     val language: AppLanguage = AppLanguage.AR,
     val soundEnabled: Boolean = true,
     val dailyGoalMinutes: Int = 20,
+    val childName: String = "بطل التعلّم",
+    val parentPin: String = "",
     val categoryStars: Map<CategoryId, Int> = defaultStarterStars(),
     val completedNumbersActivities: Set<NumbersActivityId> = emptySet(),
     val completedLettersActivities: Set<LettersActivityId> = emptySet(),
@@ -41,7 +45,12 @@ data class UserSettingsState(
     val brainMaxLevelReached: Int = 1,
     val completedWritingActivities: Set<WritingDrawingActivityId> = emptySet(),
     val practicedWritingItems: Set<String> = emptySet(),
-    val savedDrawingsTitles: Set<String> = emptySet()
+    val savedDrawingsTitles: Set<String> = emptySet(),
+    val celebratedAchievementIds: Set<String> = emptySet(),
+    val openedSurpriseIds: Set<String> = emptySet(),
+    val equippedLuluAccessory: String = "",
+    val surpriseBonusStars: Int = 0,
+    val activityLogRawEntries: Set<String> = emptySet()
 ) {
     val numbersActivityStars: Int
         get() = completedNumbersActivities.size
@@ -90,7 +99,8 @@ data class UserSettingsState(
             completedShapesActivities.size +
             completedAnimalsActivities.size +
             completedBrainActivities.size +
-            completedWritingActivities.size
+            completedWritingActivities.size +
+            surpriseBonusStars
 
     val maxPossibleStars: Int
         get() = CategoryId.entries.size * 3 +
@@ -123,6 +133,8 @@ class UserPreferencesRepository(private val context: Context) {
         val LANGUAGE = stringPreferencesKey("app_language")
         val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")
         val DAILY_GOAL_MINUTES = intPreferencesKey("daily_goal_minutes")
+        val CHILD_NAME = stringPreferencesKey("child_name")
+        val PARENT_PIN = stringPreferencesKey("parent_pin")
         val INITIALIZED = booleanPreferencesKey("stars_initialized")
         val COMPLETED_NUMBERS_ACTIVITIES = stringSetPreferencesKey("completed_numbers_activities")
         val COMPLETED_LETTERS_ACTIVITIES = stringSetPreferencesKey("completed_letters_activities")
@@ -136,6 +148,11 @@ class UserPreferencesRepository(private val context: Context) {
         val COMPLETED_WRITING_ACTIVITIES = stringSetPreferencesKey("completed_writing_activities")
         val PRACTICED_WRITING_ITEMS = stringSetPreferencesKey("practiced_writing_items")
         val SAVED_DRAWINGS_TITLES = stringSetPreferencesKey("saved_drawings_titles")
+        val CELEBRATED_ACHIEVEMENTS = stringSetPreferencesKey("celebrated_achievements")
+        val OPENED_SURPRISES = stringSetPreferencesKey("opened_surprises")
+        val EQUIPPED_LULU_ACCESSORY = stringPreferencesKey("equipped_lulu_accessory")
+        val SURPRISE_BONUS_STARS = intPreferencesKey("surprise_bonus_stars")
+        val ACTIVITY_LOG_ENTRIES = stringSetPreferencesKey("activity_log_entries")
 
         fun starKey(categoryId: CategoryId) = intPreferencesKey("stars_${categoryId.key}")
     }
@@ -145,6 +162,8 @@ class UserPreferencesRepository(private val context: Context) {
         val language = if (langCode == AppLanguage.EN.code) AppLanguage.EN else AppLanguage.AR
         val soundEnabled = prefs[Keys.SOUND_ENABLED] ?: true
         val dailyGoal = prefs[Keys.DAILY_GOAL_MINUTES] ?: 20
+        val childName = prefs[Keys.CHILD_NAME]?.takeIf { it.isNotBlank() } ?: "بطل التعلّم"
+        val parentPin = prefs[Keys.PARENT_PIN] ?: ""
         val initialized = prefs[Keys.INITIALIZED] ?: false
         val defaults = defaultStarterStars()
 
@@ -171,6 +190,12 @@ class UserPreferencesRepository(private val context: Context) {
         val completedWritingActivities = WritingDrawingActivityId.entries.filter { it.key in completedWritingKeys }.toSet()
         val practicedWritingItems = prefs[Keys.PRACTICED_WRITING_ITEMS] ?: emptySet()
         val savedDrawingsTitles = prefs[Keys.SAVED_DRAWINGS_TITLES] ?: emptySet()
+
+        val celebratedAchievements = prefs[Keys.CELEBRATED_ACHIEVEMENTS] ?: emptySet()
+        val openedSurprises = prefs[Keys.OPENED_SURPRISES] ?: emptySet()
+        val equippedLuluAccessory = prefs[Keys.EQUIPPED_LULU_ACCESSORY] ?: ""
+        val surpriseBonusStars = (prefs[Keys.SURPRISE_BONUS_STARS] ?: 0).coerceAtLeast(0)
+        val activityLogEntries = prefs[Keys.ACTIVITY_LOG_ENTRIES] ?: emptySet()
 
         val validArabicIds = LettersCurriculum.arabicLetters.map { it.id }.toSet()
         val validEnglishIds = LettersCurriculum.englishLetters.map { it.id }.toSet()
@@ -260,6 +285,8 @@ class UserPreferencesRepository(private val context: Context) {
             language = language,
             soundEnabled = soundEnabled,
             dailyGoalMinutes = dailyGoal,
+            childName = childName,
+            parentPin = parentPin,
             categoryStars = starsMap,
             completedNumbersActivities = completedNumbersActivities,
             completedLettersActivities = completedLettersActivities,
@@ -272,7 +299,12 @@ class UserPreferencesRepository(private val context: Context) {
             brainMaxLevelReached = brainMaxLevel,
             completedWritingActivities = completedWritingActivities,
             practicedWritingItems = practicedWritingItems,
-            savedDrawingsTitles = savedDrawingsTitles
+            savedDrawingsTitles = savedDrawingsTitles,
+            celebratedAchievementIds = celebratedAchievements,
+            openedSurpriseIds = openedSurprises,
+            equippedLuluAccessory = equippedLuluAccessory,
+            surpriseBonusStars = surpriseBonusStars,
+            activityLogRawEntries = activityLogEntries
         )
     }
 
@@ -292,6 +324,75 @@ class UserPreferencesRepository(private val context: Context) {
         context.dataStore.edit { prefs ->
             prefs[Keys.DAILY_GOAL_MINUTES] = minutes.coerceIn(10, 60)
         }
+    }
+
+    suspend fun setChildName(name: String) {
+        val clean = name.trim().ifBlank { "بطل التعلّم" }
+        context.dataStore.edit { prefs ->
+            prefs[Keys.CHILD_NAME] = clean
+        }
+    }
+
+    suspend fun setParentPin(pin: String) {
+        val clean = pin.filter { it.isDigit() }.take(4)
+        if (clean.length == 4) {
+            context.dataStore.edit { prefs ->
+                prefs[Keys.PARENT_PIN] = clean
+            }
+        }
+    }
+
+    suspend fun markAchievementsCelebrated(badgeIds: Collection<String>) {
+        if (badgeIds.isEmpty()) return
+        context.dataStore.edit { prefs ->
+            val current = prefs[Keys.CELEBRATED_ACHIEVEMENTS] ?: emptySet()
+            prefs[Keys.CELEBRATED_ACHIEVEMENTS] = current + badgeIds
+        }
+    }
+
+    suspend fun openSurpriseBox(item: SurpriseRewardItem): Boolean {
+        var newlyOpened = false
+        context.dataStore.edit { prefs ->
+            ensureInitialized(prefs)
+            val current = prefs[Keys.OPENED_SURPRISES] ?: emptySet()
+            if (item.id !in current) {
+                prefs[Keys.OPENED_SURPRISES] = current + item.id
+                val bonus = (prefs[Keys.SURPRISE_BONUS_STARS] ?: 0) + item.bonusStars
+                prefs[Keys.SURPRISE_BONUS_STARS] = bonus
+                if (item.isLuluAccessory) {
+                    prefs[Keys.EQUIPPED_LULU_ACCESSORY] = item.id
+                }
+                newlyOpened = true
+            }
+        }
+        return newlyOpened
+    }
+
+    suspend fun equipLuluAccessory(accessoryId: String) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.EQUIPPED_LULU_ACCESSORY] = accessoryId
+        }
+    }
+
+    private fun appendActivityLog(
+        prefs: androidx.datastore.preferences.core.MutablePreferences,
+        id: String,
+        worldCategory: CategoryId,
+        titleAr: String,
+        titleEn: String,
+        starsEarned: Int = 1
+    ) {
+        val current = prefs[Keys.ACTIVITY_LOG_ENTRIES] ?: emptySet()
+        val entry = ActivityLogEntry.createNow(
+            id = id,
+            worldCategory = worldCategory,
+            titleAr = titleAr,
+            titleEn = titleEn,
+            starsEarned = starsEarned
+        )
+        // Keep up to 60 recent entries
+        val updated = (current + entry.serialize()).toList().takeLast(60).toSet()
+        prefs[Keys.ACTIVITY_LOG_ENTRIES] = updated
     }
 
     suspend fun markNumbersActivityCompleted(activityId: NumbersActivityId): Boolean {
@@ -315,6 +416,14 @@ class UserPreferencesRepository(private val context: Context) {
                     prefs[Keys.starKey(CategoryId.NUMBERS)] = categoryStarLevel
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "num_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.NUMBERS,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -342,6 +451,14 @@ class UserPreferencesRepository(private val context: Context) {
                     }
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "let_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.ARABIC_LETTERS,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -400,6 +517,14 @@ class UserPreferencesRepository(private val context: Context) {
                     prefs[Keys.starKey(CategoryId.COLORS)] = starLevel
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "col_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.COLORS,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -424,6 +549,14 @@ class UserPreferencesRepository(private val context: Context) {
                     prefs[Keys.starKey(CategoryId.SHAPES)] = starLevel
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "shp_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.SHAPES,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -448,6 +581,14 @@ class UserPreferencesRepository(private val context: Context) {
                     prefs[Keys.starKey(CategoryId.ANIMALS)] = starLevel
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "ani_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.ANIMALS,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -476,6 +617,14 @@ class UserPreferencesRepository(private val context: Context) {
             if (levelReached > currentLevel) {
                 prefs[Keys.BRAIN_MAX_LEVEL] = levelReached.coerceIn(1, 3)
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "brn_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.BRAIN_GAMES,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -500,6 +649,14 @@ class UserPreferencesRepository(private val context: Context) {
                     prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] = starLevel
                 }
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "wrt_${activityId.key}_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.WRITING_DRAWING,
+                titleAr = activityId.titleAr,
+                titleEn = activityId.titleEn,
+                starsEarned = 1
+            )
         }
         return newlyAwarded
     }
@@ -537,6 +694,14 @@ class UserPreferencesRepository(private val context: Context) {
             if (existing < 2) {
                 prefs[Keys.starKey(CategoryId.WRITING_DRAWING)] = 2
             }
+            appendActivityLog(
+                prefs = prefs,
+                id = "drw_${System.currentTimeMillis()}",
+                worldCategory = CategoryId.WRITING_DRAWING,
+                titleAr = "حفظ لوحة فنية ($title)",
+                titleEn = "Saved Artwork ($title)",
+                starsEarned = 1
+            )
         }
     }
 
@@ -564,6 +729,11 @@ class UserPreferencesRepository(private val context: Context) {
             prefs[Keys.COMPLETED_WRITING_ACTIVITIES] = emptySet()
             prefs[Keys.PRACTICED_WRITING_ITEMS] = emptySet()
             prefs[Keys.SAVED_DRAWINGS_TITLES] = emptySet()
+            prefs[Keys.CELEBRATED_ACHIEVEMENTS] = emptySet()
+            prefs[Keys.OPENED_SURPRISES] = emptySet()
+            prefs[Keys.EQUIPPED_LULU_ACCESSORY] = ""
+            prefs[Keys.SURPRISE_BONUS_STARS] = 0
+            prefs[Keys.ACTIVITY_LOG_ENTRIES] = emptySet()
             CategoryId.entries.forEach { id ->
                 prefs[Keys.starKey(id)] = 0
             }

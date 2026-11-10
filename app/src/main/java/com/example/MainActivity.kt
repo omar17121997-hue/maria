@@ -21,15 +21,17 @@ import com.example.model.LettersSectionMode
 import com.example.ui.AppDestination
 import com.example.ui.FunLearningUiState
 import com.example.ui.FunLearningViewModel
-import com.example.ui.screens.CategoryPlaceholderScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LearningJourneyModal
-import com.example.ui.screens.ParentSectionDialog
 import com.example.ui.screens.animals.AnimalsWorldScreen
 import com.example.ui.screens.brain.BrainGamesWorldScreen
 import com.example.ui.screens.colors.ColorsWorldScreen
 import com.example.ui.screens.letters.LettersWorldScreen
 import com.example.ui.screens.numbers.NumbersWorldScreen
+import com.example.ui.screens.parent.ParentDashboardScreen
+import com.example.ui.screens.parent.ParentPinGateDialog
+import com.example.ui.screens.rewards.AchievementCelebrationDialog
+import com.example.ui.screens.rewards.RewardsAndCertificatesScreen
 import com.example.ui.screens.shapes.ShapesWorldScreen
 import com.example.ui.screens.writing.WritingDrawingWorldScreen
 import com.example.ui.theme.FunLearningWorldTheme
@@ -75,7 +77,37 @@ fun FunLearningWorldApp(
                         onOpenParentSection = viewModel::openParentSection,
                         onTapLuluGreeting = viewModel::cycleLuluGreeting,
                         onSelectCategory = viewModel::openCategory,
-                        onOpenJourneyModal = viewModel::openJourneyModal
+                        onOpenJourneyModal = viewModel::openRewardsWorld,
+                        onSpeakLulu = { text -> viewModel.speakLulu(text) },
+                        onUpdateChildName = viewModel::updateChildName
+                    )
+                }
+
+                is AppDestination.RewardsWorld -> {
+                    RewardsAndCertificatesScreen(
+                        uiState = uiState,
+                        onNavigateHome = viewModel::navigateHome,
+                        onSelectLanguage = viewModel::selectLanguage,
+                        onToggleSound = viewModel::toggleSound,
+                        onSpeakLulu = viewModel::speakLulu,
+                        onSelectCategory = viewModel::openCategory,
+                        onOpenSurpriseBox = viewModel::openSurpriseBox,
+                        onEquipAccessory = viewModel::equipLuluAccessory,
+                        onUpdateChildName = viewModel::updateChildName
+                    )
+                }
+
+                is AppDestination.ParentDashboard -> {
+                    ParentDashboardScreen(
+                        uiState = uiState,
+                        onNavigateHome = viewModel::navigateHome,
+                        onOpenCategory = viewModel::openCategory,
+                        onSelectLanguage = viewModel::selectLanguage,
+                        onToggleSound = viewModel::toggleSound,
+                        onSetDailyGoal = viewModel::setDailyGoalMinutes,
+                        onUpdateChildName = viewModel::updateChildName,
+                        onUpdateParentPin = viewModel::updateParentPin,
+                        onResetProgress = viewModel::resetProgress
                     )
                 }
 
@@ -173,14 +205,10 @@ fun FunLearningWorldApp(
         }
 
         if (uiState.showParentDialog) {
-            ParentSectionDialog(
+            ParentPinGateDialog(
                 uiState = uiState,
                 onDismiss = viewModel::closeParentSection,
-                onSetDailyGoal = viewModel::setDailyGoalMinutes,
-                onResetStars = viewModel::resetProgress,
-                onRestoreSampleStars = viewModel::restoreSampleStars,
-                onSelectLanguage = viewModel::selectLanguage,
-                onToggleSound = viewModel::toggleSound
+                onPinVerified = viewModel::unlockParentDashboardWithPin
             )
         }
 
@@ -189,6 +217,15 @@ fun FunLearningWorldApp(
                 uiState = uiState,
                 onDismiss = viewModel::closeJourneyModal,
                 onSelectCategory = viewModel::openCategory
+            )
+        }
+
+        uiState.celebratingBadge?.let { badge ->
+            AchievementCelebrationDialog(
+                badge = badge,
+                language = uiState.settings.language,
+                onDismiss = viewModel::dismissAchievementCelebration,
+                onOpenRewardsWorld = viewModel::openRewardsWorld
             )
         }
     }

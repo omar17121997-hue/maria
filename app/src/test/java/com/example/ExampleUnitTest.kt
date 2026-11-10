@@ -1,14 +1,19 @@
 package com.example
 
+import com.example.data.UserSettingsState
+import com.example.model.AchievementBadge
+import com.example.model.ActivityLogEntry
 import com.example.model.AnimalHabitat
 import com.example.model.AnimalsActivityId
 import com.example.model.AnimalsCurriculum
 import com.example.model.AppLanguage
 import com.example.model.BrainGameActivityId
 import com.example.model.BrainGamesCurriculum
+import com.example.model.CategoryId
 import com.example.model.ColoringTemplateTheme
 import com.example.model.ColorsActivityId
 import com.example.model.ColorsCurriculum
+import com.example.model.EducationalLevel
 import com.example.model.LearningCategoriesCatalog
 import com.example.model.LettersActivityId
 import com.example.model.LettersCurriculum
@@ -17,13 +22,18 @@ import com.example.model.LettersSectionMode
 import com.example.model.NumberQuizBank
 import com.example.model.NumbersActivityId
 import com.example.model.NumbersCurriculum
+import com.example.model.ParentAnalyticsEngine
+import com.example.model.RewardsProgressCalculator
 import com.example.model.ShapeType
 import com.example.model.ShapesActivityId
 import com.example.model.ShapesCurriculum
+import com.example.model.SurpriseRewardItem
+import com.example.model.WorldCertificateType
 import com.example.model.WritingDrawingActivityId
 import com.example.model.WritingDrawingCurriculum
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -161,5 +171,65 @@ class ExampleUnitTest {
         assertEquals("بـ", baaForms.initial)
         assertEquals("ـبـ", baaForms.medial)
         assertEquals("ـب", baaForms.finalForm)
+    }
+
+    @Test
+    fun verifyStage7RewardsBadgesLevelsCertificatesAndStage8ParentDashboard() {
+        // Stage 7: 10 Badges, 5 Educational Levels, 6 Surprise Items, 7 Certificates
+        assertEquals(10, AchievementBadge.entries.size)
+        assertEquals("بطل الأرقام", AchievementBadge.NUMBERS_HERO.titleAr)
+        assertEquals("بطل التعلم", AchievementBadge.LEARNING_CHAMPION.titleAr)
+
+        assertEquals(5, EducationalLevel.entries.size)
+        assertEquals("المستكشف الصغير", EducationalLevel.LITTLE_EXPLORER.titleAr)
+        assertEquals("العبقري الصغير", EducationalLevel.LITTLE_GENIUS.titleAr)
+
+        assertEquals(6, SurpriseRewardItem.entries.size)
+        assertEquals(7, WorldCertificateType.entries.size)
+
+        // Verify level progression and badge unlocking based on UserSettingsState
+        val starterState = UserSettingsState()
+        assertEquals(EducationalLevel.LITTLE_EXPLORER, RewardsProgressCalculator.computeCurrentLevel(starterState))
+
+        val advancedState = UserSettingsState(
+            completedNumbersActivities = NumbersActivityId.entries.toSet(),
+            completedLettersActivities = LettersActivityId.entries.toSet(),
+            learnedArabicLetters = LettersCurriculum.arabicLetters.take(10).map { it.id }.toSet(),
+            learnedEnglishLetters = LettersCurriculum.englishLetters.take(10).map { it.id }.toSet(),
+            completedColorsActivities = ColorsActivityId.entries.toSet(),
+            completedShapesActivities = ShapesActivityId.entries.toSet(),
+            completedAnimalsActivities = AnimalsActivityId.entries.toSet(),
+            completedBrainActivities = BrainGameActivityId.entries.toSet(),
+            brainMaxLevelReached = 3,
+            completedWritingActivities = WritingDrawingActivityId.entries.toSet(),
+            savedDrawingsTitles = setOf("لوحة قوس قزح")
+        )
+        assertEquals(EducationalLevel.LITTLE_GENIUS, RewardsProgressCalculator.computeCurrentLevel(advancedState))
+        assertEquals(10, RewardsProgressCalculator.unlockedBadges(advancedState).size)
+        assertEquals(7, RewardsProgressCalculator.unlockedCertificates(advancedState).size)
+
+        // Stage 8: ActivityLogEntry serialization & ParentAnalyticsEngine insights
+        val logEntry = ActivityLogEntry.createNow(
+            id = "test_1",
+            worldCategory = CategoryId.NUMBERS,
+            titleAr = "هيا نتعلم الأرقام",
+            titleEn = "Let's Learn Numbers",
+            starsEarned = 2
+        )
+        val deserialized = ActivityLogEntry.deserialize(logEntry.serialize())
+        assertNotNull(deserialized)
+        assertEquals("هيا نتعلم الأرقام", deserialized?.activityTitleAr)
+        assertEquals(CategoryId.NUMBERS, deserialized?.worldCategory)
+
+        val worldProgress = ParentAnalyticsEngine.buildWorldProgressList(starterState)
+        assertEquals(7, worldProgress.size)
+
+        val insights = ParentAnalyticsEngine.generateInsightsAndRecommendations(starterState)
+        assertTrue(insights.strengthsAr.isNotEmpty())
+        assertTrue(insights.recommendations.isNotEmpty())
+
+        // Verify 5-Tab 3D Bottom Navigation & Lulu 3D Mood Expressions
+        assertEquals(5, com.example.ui.components.HomeBottomNavTab.entries.size)
+        assertEquals(3, com.example.ui.components.LuluMoodExpression.entries.size)
     }
 }

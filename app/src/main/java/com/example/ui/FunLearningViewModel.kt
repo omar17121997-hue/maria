@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.UserPreferencesRepository
 import com.example.data.UserSettingsState
+import com.example.model.AchievementBadge
 import com.example.model.AnimalsActivityId
 import com.example.model.AppLanguage
 import com.example.model.BrainGameActivityId
@@ -15,7 +16,9 @@ import com.example.model.LearningCategory
 import com.example.model.LettersActivityId
 import com.example.model.LettersSectionMode
 import com.example.model.NumbersActivityId
+import com.example.model.RewardsProgressCalculator
 import com.example.model.ShapesActivityId
+import com.example.model.SurpriseRewardItem
 import com.example.model.WritingDrawingActivityId
 import com.example.util.LuluVoiceHelper
 import com.example.util.SoundEffectsHelper
@@ -23,12 +26,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface AppDestination {
     data object Home : AppDestination
     data class CategoryScreen(val categoryId: CategoryId) : AppDestination
+    data object RewardsWorld : AppDestination
+    data object ParentDashboard : AppDestination
 }
 
 data class FunLearningUiState(
@@ -37,6 +43,7 @@ data class FunLearningUiState(
     val luluGreetingIndex: Int = 0,
     val showParentDialog: Boolean = false,
     val showJourneySheet: Boolean = false,
+    val celebratingBadge: AchievementBadge? = null,
     val categories: List<LearningCategory> = LearningCategoriesCatalog.allCategories
 ) {
     val isArabic: Boolean
@@ -65,20 +72,22 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
     private val _luluGreetingIndex = MutableStateFlow(0)
     private val _showParentDialog = MutableStateFlow(false)
     private val _showJourneySheet = MutableStateFlow(false)
+    private val _celebratingBadge = MutableStateFlow<AchievementBadge?>(null)
 
     val uiState: StateFlow<FunLearningUiState> = combine(
         repository.userSettingsFlow,
         _destination,
         _luluGreetingIndex,
         _showParentDialog,
-        _showJourneySheet
-    ) { settings, destination, greetingIdx, showParent, showJourney ->
+        combine(_showJourneySheet, _celebratingBadge) { sheet, badge -> Pair(sheet, badge) }
+    ) { settings, destination, greetingIdx, showParent, (showJourney, celebratingBadge) ->
         FunLearningUiState(
             settings = settings,
             destination = destination,
             luluGreetingIndex = greetingIdx,
             showParentDialog = showParent,
-            showJourneySheet = showJourney
+            showJourneySheet = showJourney,
+            celebratingBadge = celebratingBadge
         )
     }.stateIn(
         scope = viewModelScope,
@@ -138,6 +147,8 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
 
     fun openCategory(categoryId: CategoryId) {
         SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
+        _showJourneySheet.value = false
+        _showParentDialog.value = false
         _destination.value = AppDestination.CategoryScreen(categoryId)
     }
 
@@ -145,6 +156,12 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         voiceHelper.stop()
         SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
         _destination.value = AppDestination.Home
+    }
+
+    fun openRewardsWorld() {
+        SoundEffectsHelper.playHappyMelody(uiState.value.settings.soundEnabled)
+        _showJourneySheet.value = false
+        _destination.value = AppDestination.RewardsWorld
     }
 
     fun openParentSection() {
@@ -156,19 +173,91 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         _showParentDialog.value = false
     }
 
+    fun unlockParentDashboardWithPin(pin: String) {
+        val clean = pin.filter { it.isDigit() }.take(4)
+        viewModelScope.launch {
+            if (uiState.value.settings.parentPin.isEmpty() && clean.length == 4) {
+                repository.setParentPin(clean)
+            }
+            _showParentDialog.value = false
+            SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
+            _destination.value = AppDestination.ParentDashboard
+        }
+    }
+
     fun openJourneyModal() {
-        SoundEffectsHelper.playHappyMelody(uiState.value.settings.soundEnabled)
-        _showJourneySheet.value = true
+        openRewardsWorld()
     }
 
     fun closeJourneyModal() {
         _showJourneySheet.value = false
     }
 
+    fun dismissAchievementCelebration() {
+        val current = _celebratingBadge.value
+        _celebratingBadge.value = null
+        if (current != null) {
+            viewModelScope.launch {
+                repository.markAchievementsCelebrated(listOf(current.id))
+            }
+        }
+    }
+
+    private suspend fun checkAndTriggerNewAchievementCelebration() {
+        val latest = repository.userSettingsFlow.first()
+        val unlocked = RewardsProgressCalculator.unlockedBadges(latest)
+        val uncelebrated = unlocked.firstOrNull { it.id !in latest.celebratedAchievementIds }
+        if (uncelebrated != null) {
+            repository.markAchievementsCelebrated(listOf(uncelebrated.id))
+            _celebratingBadge.value = uncelebrated
+            SoundEffectsHelper.playHappyMelody(latest.soundEnabled)
+            speakLulu(uncelebrated.luluCelebrate(latest.language), latest.language)
+        }
+    }
+
+    fun updateChildName(name: String) {
+        SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.setChildName(name)
+        }
+    }
+
+    fun updateParentPin(newPin: String) {
+        SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.setParentPin(newPin)
+        }
+    }
+
+    fun openSurpriseBox(item: SurpriseRewardItem) {
+        SoundEffectsHelper.playHappyMelody(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            val opened = repository.openSurpriseBox(item)
+            if (opened) {
+                val lang = uiState.value.settings.language
+                val msg = if (lang == AppLanguage.AR) {
+                    "مفاجأة رائعة! لقد ربحت ${item.titleAr} و${item.bonusStars} نجوم إضافية!"
+                } else {
+                    "Awesome surprise! You unlocked ${item.titleEn} and ${item.bonusStars} bonus stars!"
+                }
+                speakLulu(msg, lang)
+                checkAndTriggerNewAchievementCelebration()
+            }
+        }
+    }
+
+    fun equipLuluAccessory(accessoryId: String) {
+        SoundEffectsHelper.playPopChime(uiState.value.settings.soundEnabled)
+        viewModelScope.launch {
+            repository.equipLuluAccessory(accessoryId)
+        }
+    }
+
     fun collectPreviewStar(categoryId: CategoryId) {
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.incrementCategoryStar(categoryId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -176,6 +265,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markNumbersActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -183,6 +273,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markLettersActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -191,6 +282,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
             val newlyAdded = repository.markLetterLearned(letterId, section)
             if (newlyAdded) {
                 SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+                checkAndTriggerNewAchievementCelebration()
             }
         }
     }
@@ -199,6 +291,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markColorsActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -206,6 +299,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markShapesActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -213,6 +307,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markAnimalsActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -220,6 +315,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markBrainActivityCompleted(activityId, levelReached)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -227,6 +323,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.markWritingActivityCompleted(activityId)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 
@@ -235,6 +332,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
             val newlyPracticed = repository.markWritingItemPracticed(itemKey)
             if (newlyPracticed) {
                 SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
+                checkAndTriggerNewAchievementCelebration()
             }
         }
     }
@@ -243,6 +341,7 @@ class FunLearningViewModel(application: Application) : AndroidViewModel(applicat
         SoundEffectsHelper.playStarCollectChime(uiState.value.settings.soundEnabled)
         viewModelScope.launch {
             repository.saveChildDrawingEntry(title)
+            checkAndTriggerNewAchievementCelebration()
         }
     }
 

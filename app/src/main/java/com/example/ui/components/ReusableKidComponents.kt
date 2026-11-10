@@ -139,7 +139,7 @@ fun Bouncy3DButton(
                 .background(color = shadowColor, shape = shape)
         )
 
-        // Top face
+        // Top face with 3D Glossy Specular Highlight
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -147,33 +147,49 @@ fun Bouncy3DButton(
                 .offset(y = pressOffset),
             shape = shape,
             color = containerColor,
-            border = BorderStroke(2.dp, Color.White.copy(alpha = 0.75f))
+            border = BorderStroke(2.2.dp, Color.White.copy(alpha = 0.88f)),
+            shadowElevation = 4.dp
         ) {
-            Row(
-                modifier = Modifier.padding(contentPadding),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                if (icon != null) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = text,
-                        tint = contentColor,
-                        modifier = Modifier.size(22.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                }
-                Text(
-                    text = text,
-                    color = contentColor,
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = fontSize
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.22f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.08f)
+                            )
+                        )
                     ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier.padding(contentPadding),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    if (icon != null) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = text,
+                            tint = contentColor,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                    }
+                    Text(
+                        text = text,
+                        color = contentColor,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = fontSize
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
@@ -372,12 +388,12 @@ fun TopKidHeaderBar(
 
                     Bouncy3DIconButton(
                         icon = Icons.Filled.SupervisorAccount,
-                        contentDescription = if (isArabic) "ركن الأهل" else "Parent Section",
+                        contentDescription = if (isArabic) "لوحة ولي الأمر" else "Parent Dashboard",
                         onClick = onOpenParentSection,
                         containerColor = MagicPurple,
                         shadowColor = MagicPurpleDark,
                         iconTint = Color.White,
-                        badgeLabel = if (isArabic) "الأهل" else "Parents",
+                        badgeLabel = if (isArabic) "ولي الأمر" else "Parents",
                         testTagName = "parent_section_button"
                     )
                 }
@@ -715,12 +731,13 @@ fun LearningCategoryCard(
                 .background(color = category.shadowColor, shape = cardShape)
         )
 
-        // Main Card Surface
+        // Main 3D Glossy Cushion Card Surface (inspired by reference image)
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = lipHeight)
-                .offset(y = pressOffset),
+                .offset(y = pressOffset)
+                .shadow(8.dp, cardShape, spotColor = category.shadowColor.copy(alpha = 0.35f)),
             shape = cardShape,
             color = category.cardBgColor,
             border = BorderStroke(3.dp, Color.White)
@@ -728,11 +745,20 @@ fun LearningCategoryCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.82f),
+                                category.cardBgColor,
+                                category.cardBgColor
+                            )
+                        )
+                    )
+                    .padding(11.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 1. Top Row: Category Icon Badge + 3-Star Progress Pill (above image so illustration is 100% clear)
+                // 1. Top Row: Glossy 3D Category Number Badge + 3-Star Progress Pill
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -745,7 +771,7 @@ fun LearningCategoryCard(
                         shadowElevation = 3.dp
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
@@ -753,14 +779,14 @@ fun LearningCategoryCard(
                                 imageVector = category.icon,
                                 contentDescription = category.title(language),
                                 tint = Color.White,
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(15.dp)
                             )
                             Text(
                                 text = "${category.numberIndex}",
                                 color = Color.White,
                                 style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 12.sp
                                 )
                             )
                         }
@@ -790,7 +816,7 @@ fun LearningCategoryCard(
                     }
                 }
 
-                // 2. Full, Unobstructed Colorful 3D Cartoon Illustration
+                // 2. Full, Unobstructed 3D Cartoon Illustration
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -798,7 +824,7 @@ fun LearningCategoryCard(
                     shape = RoundedCornerShape(22.dp),
                     color = Color.White,
                     border = BorderStroke(2.5.dp, Color.White),
-                    shadowElevation = 4.dp
+                    shadowElevation = 5.dp
                 ) {
                     Image(
                         painter = painterResource(id = category.illustrationResId),
@@ -808,55 +834,36 @@ fun LearningCategoryCard(
                     )
                 }
 
-                // 3. Large, Ultra-Readable Category Title + Secondary Language Badge + Subtitle
+                // 3. Bold High-Contrast World Title (Matching Reference Subject Tiles)
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
                     Text(
                         text = category.title(language),
                         color = DeepNavyText,
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.ExtraBold,
                             fontSize = when {
-                                isTabletCard && isArabic -> 25.sp
-                                isTabletCard -> 23.sp
-                                isArabic -> 21.sp
-                                else -> 19.sp
+                                isTabletCard && isArabic -> 23.sp
+                                isTabletCard -> 21.sp
+                                isArabic -> 19.sp
+                                else -> 17.sp
                             },
-                            lineHeight = if (isArabic) 28.sp else 25.sp
+                            lineHeight = if (isArabic) 25.sp else 22.sp
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
 
-                    Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = Color.White,
-                        border = BorderStroke(1.dp, category.accentColor.copy(alpha = 0.45f))
-                    ) {
-                        Text(
-                            text = category.secondaryTitle(language),
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 2.dp),
-                            color = category.shadowColor,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = if (isTabletCard) 14.sp else 12.sp
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
                     Text(
                         text = category.subtitle(language),
                         color = SoftSlateText,
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        style = MaterialTheme.typography.bodySmall.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = if (isArabic) 15.sp else 13.sp,
-                            lineHeight = if (isArabic) 21.sp else 18.sp
+                            fontSize = if (isArabic) 13.sp else 12.sp
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -864,7 +871,7 @@ fun LearningCategoryCard(
                     )
                 }
 
-                // 4. Prominent, Easy-to-Tap 3D Interaction Button
+                // 4. Glossy 3D Play Pill Button
                 Bouncy3DButton(
                     text = category.buttonLabel(language),
                     onClick = onClick,
@@ -873,10 +880,10 @@ fun LearningCategoryCard(
                     shadowColor = category.shadowColor,
                     contentColor = Color.White,
                     icon = Icons.Filled.PlayArrow,
-                    cornerRadius = 20.dp,
-                    lipHeight = 5.dp,
-                    fontSize = if (isArabic) 17.sp else 15.sp,
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+                    cornerRadius = 18.dp,
+                    lipHeight = 4.dp,
+                    fontSize = if (isArabic) 15.sp else 14.sp,
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
                     testTagName = "category_btn_${category.id.key}"
                 )
             }
@@ -953,15 +960,15 @@ fun BottomLearningJourneyBar(
 
                     Column {
                         Text(
-                            text = if (isArabic) "رحلتي التعليمية" else "My Learning Journey",
+                            text = if (isArabic) "رحلتي التعليمية • المكافآت والشهادات" else "My Journey • Rewards & Certificates",
                             color = DeepNavyText,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = if (isArabic) 20.sp else 18.sp
+                                fontSize = if (isArabic) 19.sp else 17.sp
                             )
                         )
                         Text(
-                            text = if (isArabic) "اضغط هنا لمشاهدة نجومك وجوائزك 🌟" else "Tap here to view your stars & rewards 🌟",
+                            text = if (isArabic) "اضغط لفتح لوحة النجوم والشارات والشهادات وصندوق المفاجآت 🏅🎁" else "Tap to open Star Board, Badges, Surprise Box & Certificates 🏅🎁",
                             color = SoftSlateText,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
